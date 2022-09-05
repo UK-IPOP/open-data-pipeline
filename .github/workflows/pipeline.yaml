@@ -1,6 +1,13 @@
 name: pipeline
 on: [push]
 jobs:
+  my_docker:
+    runs-on: ubuntu-latest
+    name: stuffer
+    steps:
+      - name: setup
+        id: hello
+        uses: actions/my-docker@v1
   update-records:
     runs-on: ubuntu-latest
     steps:
