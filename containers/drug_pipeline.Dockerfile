@@ -1,7 +1,7 @@
 FROM rust:latest
 
 COPY ./tag_drugs.py .
-COPY ./finalized.csv .
+COPY ./for-drug-test.csv .
 
 RUN apt-get update && apt-get install jq -y
 
