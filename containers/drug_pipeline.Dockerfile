@@ -1,6 +1,6 @@
 FROM rust:latest
 
-COPY ./tag_drugs.py .
+COPY ./sample.py .
 COPY ./for-drug-test.csv .
 
 RUN apt-get update && apt-get install jq -y
@@ -13,7 +13,7 @@ RUN curl \
 
 RUN TERMS=`jq -r 'keys | sort | join("|")' lookup_data.json`; extract-drugs \
     simple-search \
-    "finalized.csv" \
+    "for-drug-test.csv" \
     --target-column "primarycause" \
     --id-column "casenumber" \
     --search-words $TERMS \
@@ -21,6 +21,6 @@ RUN TERMS=`jq -r 'keys | sort | join("|")' lookup_data.json`; extract-drugs \
     --threshold "0.9" \
     --format "jsonl"
 
-RUN python3 tag_drugs.py
+RUN python3 sample.py
 
 CMD ["bash"]
