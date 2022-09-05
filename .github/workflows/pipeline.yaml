@@ -7,7 +7,7 @@ jobs:
     steps:
       - name: setup
         id: hello
-        uses: actions/my-docker@v1
+        uses: UK-IPOP/open-data-pipeline/my-docker@v1
   update-records:
     runs-on: ubuntu-latest
     steps:
