@@ -6,6 +6,7 @@
 		"linea",
 		"lineb",
 		"linec",
+		"mapstructure",
 		"primarycause",
 		"secondarycause"
 	]

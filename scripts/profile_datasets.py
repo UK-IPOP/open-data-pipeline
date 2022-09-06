@@ -1,12 +1,12 @@
+#TODO: make this into a bash script using pipx to install pandas-profling!
 import pandas as pd
 from pandas_profiling import ProfileReport
 from pathlib import Path
-from rich.progress import track
-from rich import print
+from tqdm import tqdm
 
 Path("reports").mkdir(exist_ok=True)
 
-for datafile in track(
+for datafile in tqdm(
     Path("data").glob("*.jsonl"), description="Profiling files...", transient=True
 ):
     df: pd.DataFrame = pd.read_json(datafile, lines=True)  # type: ignore
@@ -16,4 +16,4 @@ for datafile in track(
         explorative=True,
     )
     report.to_file(Path(f"reports/{datafile.name.replace('.jsonl', '.html')}"))
-    print(f"[green]Wrote {datafile.name.strip('.jsonl')} to file.")
+    print(f"Wrote {datafile.name.strip('.jsonl')} to file.")

@@ -23,4 +23,3 @@ RUN TERMS=`jq -r 'keys | sort | join("|")' lookup_data.json`; extract-drugs \
 
 RUN python3 sample.py
 
-CMD ["bash"]

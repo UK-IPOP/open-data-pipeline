@@ -1,0 +1,6 @@
+name: Cook County
+source: cook-county
+url: https://datacatalog.cookcountyil.gov/resource/3trz-enys.json
+limit: 10
+orderby: death_date
+index_field: casenumber
