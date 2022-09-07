@@ -35,13 +35,18 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
           
-      - name: install rust
-        uses: actions-rs/toolchain@v1
+      - name: Install Drug ToolBox
+        uses: baptiste0928/cargo-install@v1
         with:
-          toolchain: stable
+          crate: drug-extraction-cli
+
+#       - name: install rust
+#         uses: actions-rs/toolchain@v1
+#         with:
+#           toolchain: stable
         
-      - name: install drug toolbox
-        run: cargo install drug-extraction-cli
+#       - name: install drug toolbox
+#         run: cargo install drug-extraction-cli
         
       - uses: actions/setup-python@v4
         with:
