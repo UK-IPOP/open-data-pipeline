@@ -4,32 +4,37 @@ version = "0.1.0"
 description = "A pipeline for processing open medical examier's data using GitHub Actions CI/CD."
 authors = ["Nick Anthony <nanthony007@gmail.com>"]
 license = "MIT"
+readme = "README.md"
+packages = [
+    { include = "opendata_pipeline", from = "src" },
+]
 
+[tool.poetry.scripts]
+opendata-pipeline = "opendata_pipeline:app"
 
 [tool.poetry.dependencies]
-python = "3.10"
-requests = "^2.28.1"
-geopy = "^2.2.0"
+python = ">=3.9,<3.10"
 pandas = "^1.4.4"
-scipy = "^1.9.1"
-pandas-profiling = "^3.2.0"
-orjson = "^3.8.0"
-sqlmodel = "^0.0.8"
+requests = "^2.28.1"
 rich = "^12.5.1"
-psycopg2-binary = {version = "^2.9.3", source = "test-pypi"}
+orjson = "^3.8.0"
+arcgis = "^2.0.1"
+aiohttp = "^3.8.1"
+scipy = "^1.9.1"
+pydantic = {extras = ["dotenv"], version = "^1.10.2"}
+typer = "^0.6.1"
+
 
 [tool.poetry.dev-dependencies]
 black = "^22.8.0"
 flake8 = "^5.0.4"
-pytest = "^7.1.3"
 isort = "^5.10.1"
+pytest = "^7.1.3"
+
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-
-[[tool.poetry.source]]
-name = "test-pypi"
-url = "https://test.pypi.org/simple"
-secondary = true
