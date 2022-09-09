@@ -46,7 +46,7 @@ jobs:
 
       # initialize data dir
       - name: Initialize App
-        run: opendata-pipeline init
+        run: poetry run opendata-pipeline init
 
       # fetch records
       - name: Run fetching
@@ -78,11 +78,23 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # checkout
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Poetry
+        run: pipx install poetry
+
       # setup python
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.10"
+          cache: "poetry"
+
+      # install latest version of CLI
+      - name: Install Dependencies
+        run: poetry install
 
       # download drug_prep records (should be in data folder)
       - name: Download Drug Prep Artifact
@@ -101,7 +113,7 @@ jobs:
 
       - name: Run drug extraction
         # again we don't need to `--use-remote` because we checked it out
-        run: pipx run --python $(which python) opendata-pipeline extract-drugs --use-remote
+        run: opendata-pipeline extract-drugs --use-remote
 
       # Upload drug data file artifact
       - uses: actions/upload-artifact@v3
@@ -121,11 +133,23 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # checkout
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Poetry
+        run: pipx install poetry
+
       # setup python
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.10"
+          cache: "poetry"
+
+      # install latest version of CLI
+      - name: Install Dependencies
+        run: poetry install
 
       # download records (should be in data folder)
       - name: Download Records Artifact
@@ -135,7 +159,7 @@ jobs:
 
       - name: Run geocoding
         # again we don't need to `--use-remote` because we checked it out
-        run: pipx run --python $(which python) opendata-pipeline geocode --use-remote
+        run: opendata-pipeline geocode --use-remote
         # use env here to scope to this command
         env:
           # get from github secrets
@@ -159,15 +183,27 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # checkout
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Poetry
+        run: pipx install poetry
+
       # setup python
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.10"
+          cache: "poetry"
+
+      # install latest version of CLI
+      - name: Install Dependencies
+        run: poetry install
 
       # install latest version of CLI
       - name: Install CLI
-        run: pipx run --python $(which python) opendata-pipeline analyze --use-remote
+        run: opendata-pipeline analyze --use-remote
 
       # download records (should be in data folder)
       - name: Download Records Artifact
