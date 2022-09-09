@@ -15,7 +15,7 @@ def read_geocoded_data(source: models.DataSource) -> pd.DataFrame:
         typ="frame",
     ).set_index("CaseIdentifier")
     # column we set to data source name --> `data_source`
-    filt_df = df[df["data_source"] == source.name].copy()
+    filt_df = df[df["data_source"] == source.name].drop(columns=["data_source"])
     dff = filt_df.rename(columns={col: f"geocoded_{col}" for col in filt_df.columns})
     return dff
 
@@ -55,7 +55,7 @@ def read_records(source: models.DataSource) -> pd.DataFrame:
         lines=True,
         orient="records",
         typ="frame",
-    )
+    ).set_index("CaseIdentifier")
     return df
 
 
@@ -73,9 +73,9 @@ def make_wide(df: pd.DataFrame) -> pd.DataFrame:
         # set to 1 because we found it
         records[case_id][column_name] = 1
 
-        for tag in row["tags"]:
+        for tag in row["tags"].split("|"):
             # set to 1 because we found it
-            records[case_id][tag] = 1
+            records[case_id][f"{tag}_tag"] = 1
 
     flat_records = [{"CaseIdentifier": k, **v} for k, v in records.items()]
     wide_df = pd.DataFrame(flat_records).set_index("CaseIdentifier")
@@ -150,8 +150,8 @@ def run(settings: models.Settings, update_remote: bool) -> None:
         print(cleaned_df.shape)
 
         # write to csv
-        cleaned_df.to_csv(
-            Path("data") / data_source.csv_filename,
+        cleaned_df.reset_index().to_csv(
+            Path("data") / data_source.csv_filename, index=False
         )
 
 
