@@ -155,7 +155,7 @@ def analyze(
     Example: opendata-pipeline analyze --use-remote
     """
     settings = get_settings(remote=use_remote)
-    analyzer.run(settings=settings, update_remote=update_remote)
+    analyzer.run(settings=settings)
 
 
 @app.command("teardown")
