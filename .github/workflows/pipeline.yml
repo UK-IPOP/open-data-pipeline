@@ -43,7 +43,9 @@ jobs:
         run: python -m pip install opendata-pipeline
         # run: pipx install --python $(which python) opendata-pipeline
 
-      - run: pipx install opendata-pipeline
+      - run: opendata-pipeline --help
+
+      - run: pipx install --python $(which python) opendata-pipeline
 
       - run: opendata-pipeline --help
 
