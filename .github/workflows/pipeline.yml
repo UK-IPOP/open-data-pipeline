@@ -90,7 +90,6 @@ jobs:
           crate: drug-extraction-cli
           version: latest
           use-tool-cache: true
-        run: extract-drugs --version
 
       - name: Run drug extraction
         # again we don't need to `--use-remote` because we checked it out
