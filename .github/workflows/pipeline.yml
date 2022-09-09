@@ -15,7 +15,7 @@ on:
 # making executive decision to setup the project in multiple jobs so that we can run in parallel
 # as opposed to one `poetry install` but sequential running
 env:
-  PIPX_DEFAULT_PYTHON: 3.9
+  PIPX_DEFAULT_PYTHON: python3.9
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -38,7 +38,7 @@ jobs:
 
       # install latest version of CLI
       - name: Install CLI
-        run: pipx install opendata-pipeline
+        run: pipx install --python $(which python) opendata-pipeline
 
       # initialize data dir
       - name: Initialize App
