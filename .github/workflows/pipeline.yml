@@ -162,6 +162,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: records-files
+          path: data
 
       - run: ls
 
@@ -218,6 +219,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: records-files
+          path: data
 
       - name: Prepare data for release job
         uses: actions/upload-artifact@v3
