@@ -160,6 +160,8 @@ jobs:
         with:
           name: records-files
 
+      - run: ls
+
       - name: Run geocoding
         # again we don't need to `--use-remote` because we checked it out
         run: poetry run poetry run opendata-pipeline geocode --use-remote
