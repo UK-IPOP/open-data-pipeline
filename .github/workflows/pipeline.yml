@@ -1,10 +1,6 @@
 # This exists as our open data pipeline.
 # It runs the opendata-pipeline CLI app with some enhancements for CI/CD.
 
-# ! Actually can't we just pipx install the program??
-# assuming the latest version has been published... and we can still `checkout`
-# ^ do we even need to checkout?? can't we just `--use-remote`???
-
 name: OpenData Pipeline
 
 # Controls when the workflow will run
@@ -30,30 +26,25 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout
-        uses: actions/checkout@v3
-
       # setup python
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
-          cache: "poetry"
 
-      # install dependencies and package
-      - name: Install Dependencies
-        run: poetry install
+      # install latest version of CLI
+      - name: Install CLI
+        run: pipx install opendata-pipeline
 
       # initialize data dir
       - name: Initialize App
-        run: poetry run opendata-pipeline init
+        run: opendata-pipeline init
 
       # fetch records
       - name: Run fetching
         # here we can read local (which is latest remote)
         # BUT we still need to update the remote
-        run: poetry run opendata-pipeline fetch --update-remote
+        run: opendata-pipeline fetch --update-remote --use-remote
 
       - name: Upload Drug Prep Artifact
         uses: actions/upload-artifact@v3
@@ -67,9 +58,6 @@ jobs:
           name: records-files
           path: data/*_records.jsonl
 
-      - name: Finish
-        run: echo "Done."
-
   # extract drugs from the data
   extract-drugs:
     name: Extract Drugs
@@ -82,20 +70,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout
-        uses: actions/checkout@v3
-
       # setup python
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
-          cache: "poetry"
-
-      # install dependencies and package
-      - name: Install Dependencies
-        run: poetry install
 
       # download drug_prep records (should be in data folder)
       - name: Download Drug Prep Artifact
@@ -115,16 +94,13 @@ jobs:
 
       - name: Run drug extraction
         # again we don't need to `--use-remote` because we checked it out
-        run: poetry run opendata-pipeline extract-drugs
+        run: pipx run opendata-pipeline extract-drugs --use-remote
 
       # Upload drug data file artifact
       - uses: actions/upload-artifact@v3
         with:
           name: drug-output
           path: data/drug_data.jsonl
-
-      - name: Finish
-        run: echo "Done."
 
   # geocode the data
   geocode:
@@ -138,20 +114,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout
-        uses: actions/checkout@v3
-
       # setup python
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
-          cache: "poetry"
-
-      # install dependencies and package
-      - name: Install Dependencies
-        run: poetry install
 
       # download records (should be in data folder)
       - name: Download Records Artifact
@@ -161,7 +128,7 @@ jobs:
 
       - name: Run geocoding
         # again we don't need to `--use-remote` because we checked it out
-        run: poetry run opendata-pipeline geocode
+        run: pipx run opendata-pipeline geocode --use-remote
         # use env here to scope to this command
         env:
           # get from github secrets
@@ -172,9 +139,6 @@ jobs:
         with:
           name: geocoding-output
           path: data/geocoded_data.jsonl
-
-      - name: Finish
-        run: echo "Done."
 
   # analyze/combine the data
   analyze:
@@ -188,20 +152,15 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout
-        uses: actions/checkout@v3
-
       # setup python
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
-          cache: "poetry"
 
-      # install dependencies and package
-      - name: Install Dependencies
-        run: poetry install
+      # install latest version of CLI
+      - name: Install CLI
+        run: pipx run opendata-pipeline analyze --use-remote
 
       # download records (should be in data folder)
       - name: Download Records Artifact
@@ -209,19 +168,40 @@ jobs:
         with:
           name: records-files
 
-      - name: Run geocoding
-        # again we don't need to `--use-remote` because we checked it out
-        run: poetry run opendata-pipeline geocode
-        # use env here to scope to this command
-        env:
-          # get from github secrets
-          ARCGIS_API_KEY: ${{ secrets.ARCGIS_TOKEN }}
-
-      # Upload geocoding file artifact
-      - uses: actions/upload-artifact@v3
+      - name: Prepare data for release job
+        uses: actions/upload-artifact@v3
         with:
-          name: geocoding-output
-          path: data/geocoded_data.jsonl
+          name: release-assets
+          path: assets
 
-      - name: Finish
-        run: echo "Done."
+  release:
+    name: Release Data
+
+    needs: analyze
+
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Download Records Artifact
+        uses: actions/download-artifact@v3
+        with:
+          # should now be in assets folder
+          name: release-assets
+
+      # use a community action
+      - name: Create Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          # auto set by github
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          # uses today's date
+          title: "Data Release: {{ $(date +'%Y-%m-%d') }}"
+          files: |
+            README.md
+            LICENSE.txt
+            assets/*
