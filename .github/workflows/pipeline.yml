@@ -26,21 +26,20 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Install dependency
-        run: sudo apt install libkrb5-dev
+      # checkout
+      - name: Checkout
+        uses: actions/checkout@v3
 
       # setup python
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
-          # cache: "poetry"
-
-      - run: python --version
+          python-version: "3.10"
+          cache: "poetry"
 
       # install latest version of CLI
-      - name: Install CLI
-        run: pipx install --python $(which python) opendata-pipeline
+      - name: Install Dependencies
+        run: poetry install
 
       # initialize data dir
       - name: Initialize App
@@ -50,7 +49,7 @@ jobs:
       - name: Run fetching
         # here we can read local (which is latest remote)
         # BUT we still need to update the remote
-        run: opendata-pipeline fetch --update-remote --use-remote
+        run: opendata-pipeline fetch --update-remote
 
       - name: Upload Drug Prep Artifact
         uses: actions/upload-artifact@v3

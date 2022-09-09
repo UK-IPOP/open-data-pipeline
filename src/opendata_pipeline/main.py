@@ -113,7 +113,7 @@ def geocode(
     Example: opendata-pipeline geocode --use-remote
     """
     settings = get_settings(remote=use_remote)
-    geocoder.run(settings=settings, alternate_key=custom_key)
+    asyncio.run(geocoder.run(settings=settings, alternate_key=custom_key))
 
 
 @app.command()
