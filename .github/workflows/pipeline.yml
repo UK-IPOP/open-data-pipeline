@@ -40,14 +40,7 @@ jobs:
 
       # install latest version of CLI
       - name: Install CLI
-        run: python -m pip install opendata-pipeline
-        # run: pipx install --python $(which python) opendata-pipeline
-
-      - run: opendata-pipeline --help
-
-      - run: pipx install --python $(which python) opendata-pipeline
-
-      - run: opendata-pipeline --help
+        run: pipx install --python $(which python) opendata-pipeline
 
       # initialize data dir
       - name: Initialize App
@@ -106,7 +99,7 @@ jobs:
 
       - name: Run drug extraction
         # again we don't need to `--use-remote` because we checked it out
-        run: pipx run opendata-pipeline extract-drugs --use-remote
+        run: pipx run --python $(which python) opendata-pipeline extract-drugs --use-remote
 
       # Upload drug data file artifact
       - uses: actions/upload-artifact@v3
@@ -140,7 +133,7 @@ jobs:
 
       - name: Run geocoding
         # again we don't need to `--use-remote` because we checked it out
-        run: pipx run opendata-pipeline geocode --use-remote
+        run: pipx run --python $(which python) opendata-pipeline geocode --use-remote
         # use env here to scope to this command
         env:
           # get from github secrets
@@ -172,7 +165,7 @@ jobs:
 
       # install latest version of CLI
       - name: Install CLI
-        run: pipx run opendata-pipeline analyze --use-remote
+        run: pipx run --python $(which python) opendata-pipeline analyze --use-remote
 
       # download records (should be in data folder)
       - name: Download Records Artifact
