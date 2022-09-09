@@ -101,6 +101,10 @@ class DataSource(BaseModel):
     def drug_prep_filename(self) -> str:
         return f"{self.name.replace(' ', '_').lower()}_drug_prep.csv"
 
+    @property
+    def csv_filename(self) -> str:
+        return f"{self.name.replace(' ', '_').lower()}_wide_form.csv"
+
 
 # This should model config.yaml
 class Settings(BaseSettings):

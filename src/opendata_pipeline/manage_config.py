@@ -5,7 +5,7 @@ import orjson
 import requests
 import base64
 
-from . import models
+from opendata_pipeline import models
 
 # functions to update local and remote data
 

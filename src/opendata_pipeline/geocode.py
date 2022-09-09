@@ -7,7 +7,7 @@ from arcgis.geocoding import geocode
 from rich.progress import track
 import orjson
 
-from . import manage_config, models
+from opendata_pipeline import manage_config, models
 
 # TODO: do we want to add average distance to other points?
 # - this could be some sort of analysis of the data that is produced but not put in the file

@@ -9,7 +9,7 @@ import asyncio
 from rich.progress import track
 
 
-from . import manage_config, models
+from opendata_pipeline import manage_config, models
 
 
 # this pattern of accessing "value" is common to all opendata api responses

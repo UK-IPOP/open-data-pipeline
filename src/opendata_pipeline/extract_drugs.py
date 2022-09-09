@@ -6,7 +6,7 @@ import orjson
 import requests
 import subprocess
 
-from . import manage_config, models
+from opendata_pipeline import manage_config, models
 
 
 def fetch_drug_search_terms() -> dict[str, str]:
