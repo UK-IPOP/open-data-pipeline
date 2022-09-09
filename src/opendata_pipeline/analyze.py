@@ -124,7 +124,7 @@ def extract_plot_data(df: pd.DataFrame):
     pass
 
 
-def run(settings: models.Settings, update_remote: bool) -> None:
+def run(settings: models.Settings) -> None:
     for data_source in settings.sources:
         print(data_source.name)
 
@@ -135,6 +135,15 @@ def run(settings: models.Settings, update_remote: bool) -> None:
         geocoded_df = read_geocoded_data(source=data_source)
         print(geocoded_df.shape)
 
+        # write a file for each analysis step for the data source
+        # written into a folder for the data source so that we can zip
+        data_dir = Path("data") / data_source.name.replace(" ", "_")
+        data_dir.mkdir(exist_ok=True)
+        records_df.reset_index().to_csv(data_dir / "records.csv")
+        drug_df.reset_index().to_csv(data_dir / "drug.csv")
+        geocoded_df.reset_index().to_csv(data_dir / "geocoded.csv")
+        # eventually add spatial
+
         combined_df = combine(
             base_df=records_df,
             geo_df=geocoded_df,
@@ -143,6 +152,7 @@ def run(settings: models.Settings, update_remote: bool) -> None:
         print(combined_df.shape)
 
         # extract_plot_data(df=combined_df)
+        # if update remote, write to github, else local
         # write plot_data
 
         cleaned_df = cleanup_columns(df=combined_df)
@@ -157,4 +167,4 @@ def run(settings: models.Settings, update_remote: bool) -> None:
 
 if __name__ == "__main__":
     settings = manage_config.get_local_config()
-    run(settings=settings, update_remote=False)
+    run(settings=settings)
