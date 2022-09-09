@@ -1,0 +1,3 @@
+# use this one to publish PyPI packages
+
+# trigger on PR MERGE (not PR itself)
