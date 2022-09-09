@@ -12,7 +12,7 @@ from opendata_pipeline import models
 
 def get_local_config() -> models.Settings:
     """Get the config.json file from the project's root."""
-    return models.Settings()  # type: ignore
+    return models.Settings.parse_file("config.json")
 
 
 def get_remote_config() -> models.Settings:

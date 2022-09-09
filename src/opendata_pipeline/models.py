@@ -1,17 +1,7 @@
 from __future__ import annotations
 
 from pydantic import BaseSettings, Field, BaseModel, validator
-import orjson
-from pathlib import Path
-from typing import Any, Optional
-
-
-def json_config_settings_source(_: BaseSettings) -> dict[str, Any]:
-    """
-    A simple settings source that loads variables from a JSON file
-    at the project's root.
-    """
-    return orjson.loads(Path("config.json").read_bytes())
+from typing import Optional
 
 
 class SpatialReference(BaseModel):
@@ -126,12 +116,12 @@ class Settings(BaseSettings):
             file_secret_settings,
         ):
             return (
-                env_settings,
-                json_config_settings_source,
                 init_settings,
+                env_settings,
                 file_secret_settings,
             )
 
 
 if __name__ == "__main__":
-    print(Settings())  # type: ignore
+    # tests local
+    print(Settings.parse_file("config.json"))
