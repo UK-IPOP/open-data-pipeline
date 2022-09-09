@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 # making executive decision to setup the project in multiple jobs so that we can run in parallel
-# as opposed to one `poetry install` but sequential running
+# as opposed to one `poetry install --no-dev` but sequential running
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -42,7 +42,7 @@ jobs:
 
       # install latest version of CLI
       - name: Install Dependencies
-        run: poetry install
+        run: poetry install --no-dev
 
       # initialize data dir
       - name: Initialize App
@@ -94,7 +94,7 @@ jobs:
 
       # install latest version of CLI
       - name: Install Dependencies
-        run: poetry install
+        run: poetry install --no-dev
 
       # download drug_prep records (should be in data folder)
       - name: Download Drug Prep Artifact
@@ -149,7 +149,7 @@ jobs:
 
       # install latest version of CLI
       - name: Install Dependencies
-        run: poetry install
+        run: poetry install --no-dev
 
       # download records (should be in data folder)
       - name: Download Records Artifact
@@ -199,7 +199,7 @@ jobs:
 
       # install latest version of CLI
       - name: Install Dependencies
-        run: poetry install
+        run: poetry install --no-dev
 
       # install latest version of CLI
       - name: Install CLI
