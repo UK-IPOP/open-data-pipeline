@@ -98,8 +98,8 @@ class DataSource(BaseModel):
 
 # This should model config.yaml
 class Settings(BaseSettings):
-    arcgis_api_key: Optional[str] = Field(..., env="ARCGIS_API_KEY", read_only=True)
-    github_token: Optional[str] = Field(..., env="GH_TOKEN", read_only=True)
+    arcgis_api_key: Optional[str] = Field(None, env="ARCGIS_API_KEY", read_only=True)
+    github_token: Optional[str] = Field(None, env="GH_TOKEN", read_only=True)
 
     sources: list[DataSource] = Field(..., description="List of data sources")
 

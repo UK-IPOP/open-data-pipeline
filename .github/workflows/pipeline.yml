@@ -5,12 +5,13 @@ name: OpenData Pipeline
 
 # Controls when the workflow will run
 on:
+  push
   # want to trigger on CRON or manually
   # CRON....
   # TODO: add CRON
 
   # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  # workflow_dispatch:
 
 # making executive decision to setup the project in multiple jobs so that we can run in parallel
 # as opposed to one `poetry install --no-dev` but sequential running
