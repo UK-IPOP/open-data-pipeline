@@ -1,6 +1,8 @@
 #! /bin/bash
 
-for file in data/*.jsonl; do
+mkdir -p reports
+
+for file in data/*_records.jsonl; do
 
     echo "Processing $file ..."
     # take action on each file. $f store current file name
@@ -9,8 +11,7 @@ for file in data/*.jsonl; do
 
     pandas_profiling $file "reports/$title.html" \
         --title "Pandas Profiling Report for $title" \
-        --silent \
-        --minimal  # toggle for faster... check duration once all data is merged
+        --silent 
 
 done
 
