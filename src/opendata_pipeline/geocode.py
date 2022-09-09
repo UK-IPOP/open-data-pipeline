@@ -162,10 +162,11 @@ def run(settings: models.Settings, alternate_key: str | None) -> None:
                     best_result = geocoded_resp[0]  # type: ignore
                     geo_data = {
                         "CaseIdentifier": case_id,
-                        "Latitude": best_result["location"]["y"],
-                        "Longitude": best_result["location"]["x"],
-                        "Score": best_result["score"],
-                        "MatchAddress": best_result["address"],
+                        "latitude": best_result["location"]["y"],
+                        "longitude": best_result["location"]["x"],
+                        "score": best_result["score"],
+                        "matched_address": best_result["address"],
+                        "data_source": data_source.name,
                     }
                     geocoded_results.append(geo_data)
 
