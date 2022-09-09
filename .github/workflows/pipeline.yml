@@ -214,6 +214,20 @@ jobs:
           name: records-files
           path: data
 
+      # download records (should be in data folder)
+      - name: Download Drug Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: drug-output
+          path: data
+
+      # download records (should be in data folder)
+      - name: Download Geocoding Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: geocoding-output
+          path: data
+
       # install latest version of CLI
       - name: Run analyzer
         run: poetry run opendata-pipeline analyze
