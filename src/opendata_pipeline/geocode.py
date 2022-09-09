@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
-from arcgis import GIS
-from arcgis.geocoding import geocode
 from rich.progress import track
 import orjson
+import aiohttp
+import asyncio
 
 from opendata_pipeline import manage_config, models
 
@@ -122,16 +122,82 @@ def export_geocoded_results(data: list[dict[str, Any]]) -> None:
             f.write(orjson.dumps(record).decode("utf-8") + "\n")
 
 
-def run(settings: models.Settings, alternate_key: str | None) -> None:
+def build_url(
+    bounds: models.GeoBounds, address_data: dict[str, str | int | None], key: str
+) -> str:
+    fat_url = f"https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&outFields=none&outSR=4326&token={key}&forStorage=false&locationType=street&sourceCounty=USA&maxLocations=1&maxOutOfRange=false"
+
+    # combines values that we have
+    address_string = " ".join([str(v) for v in address_data.values() if v])
+
+    # the string will get url encoded by requests, we needed to handle the data
+    return f"{fat_url}&searchExtent={bounds.json()}&SingleLine={address_string}"
+
+
+async def get_geo_result(
+    session: aiohttp.ClientSession, url: str, id_: int, data_source_name: str
+) -> dict[str, Any] | None:
+    async with session.get(url) as response:
+        json_data = await response.json()
+        if results := json_data.get("candidates", None):
+            best = results[0]
+            return {
+                "CaseIdentifier": id_,
+                "latitude": best["location"]["y"],
+                "longitude": best["location"]["x"],
+                "score": best["score"],
+                "matched_address": best["address"],
+                "data_source": data_source_name,
+            }
+    return None
+
+
+async def geocode_records(opts: models.DataSource, key: str) -> list[dict[str, Any]]:
+    records = read_records(opts)
+    if opts.spatial_config is None:
+        raise ValueError("spatial_config is required for geocoding")
+
+    async with aiohttp.ClientSession() as session:
+        tasks = []
+        for record in records:
+            data = prepare_address(record, opts)
+            if data is None:
+                continue
+            id_, address_data = data
+            url = build_url(
+                bounds=opts.spatial_config.bounds, address_data=address_data, key=key
+            )
+            tasks.append(
+                get_geo_result(
+                    session=session, url=url, id_=id_, data_source_name=opts.name
+                )
+            )
+
+        results: list[dict[str, Any]] = []
+        for task in track(
+            asyncio.as_completed(tasks),
+            total=len(tasks),
+            description=f"Geocoding records for {opts.name}",
+        ):
+            result: dict[str, Any] | None = await task
+            if result is not None:
+                results.append(result)
+
+            # this difference is due to cleaning
+    print(f"geocoded {len(results)} records out of {len(records)}")
+    return results
+
+
+async def run(settings: models.Settings, alternate_key: str | None) -> None:
     if settings.arcgis_api_key is None and alternate_key is None:
         raise ValueError(
             "arcgis_api_key is required for geocoding. Consider using the --alternate-key flag"
         )
     # initialize ARCGIS
     if settings.arcgis_api_key is not None:
-        GIS(api_key=settings.arcgis_api_key)
+        key = settings.arcgis_api_key
     elif alternate_key is not None:
-        GIS(api_key=alternate_key)
+        key = alternate_key
     else:
         raise ValueError("arcgis_api_key is required for geocoding")
 
@@ -140,42 +206,12 @@ def run(settings: models.Settings, alternate_key: str | None) -> None:
         print(data_source)
 
         if data_source.needs_geocoding:
-            if data_source.spatial_config is None:
-                raise ValueError("spatial_config is required for geocoding")
-            records = read_records(data_source)
-            for record in track(
-                records,
-                description=f"Geocoding {data_source.name}",
-                total=len(records),
-            ):
-                address_data = prepare_address(record, data_source)
-                if address_data is None:
-                    continue
-                case_id, address_dict = address_data
-                geocoded_resp = geocode(
-                    address_dict,
-                    search_extent=data_source.spatial_config.bounds.dict(),  # type: ignore
-                    location_type="rooftop",
-                    match_out_of_range=False,
-                )
-                if geocoded_resp:
-                    best_result = geocoded_resp[0]  # type: ignore
-                    geo_data = {
-                        "CaseIdentifier": case_id,
-                        "latitude": best_result["location"]["y"],
-                        "longitude": best_result["location"]["x"],
-                        "score": best_result["score"],
-                        "matched_address": best_result["address"],
-                        "data_source": data_source.name,
-                    }
-                    geocoded_results.append(geo_data)
-
-            # this diffrence is due to cleaning
-            print(f"geocoded {len(geocoded_results)} records out of {len(records)}")
+            source_set = await geocode_records(data_source, key)
+            geocoded_results.extend(source_set)
 
     export_geocoded_results(geocoded_results)
 
 
 if __name__ == "__main__":
     settings = manage_config.get_local_config()
-    run(settings=settings, alternate_key=None)
+    asyncio.run(run(settings, alternate_key=None))
