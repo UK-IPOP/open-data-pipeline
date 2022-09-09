@@ -7,7 +7,7 @@ import typer
 
 
 # use a lot of aliases for these imports
-from . import (
+from opendata_pipeline import (
     models,
     manage_config,
     extract_drugs as drug_extractor,
@@ -118,12 +118,44 @@ def geocode(
 
 @app.command()
 def spatial_join():
+    """Spatially join data sources.
+
+    Currently this command is a placeholder. It will be implemented in the future.
+    """
     spatial_joiner.run()
 
 
-@app.command()
-def analyze():
-    analyzer.run()
+@app.command("analyze")
+def analyze(
+    use_remote: bool = typer.Option(
+        False,
+        help="Whether to use the remote configuration or not. Default is False (i.e. use local config.json)",
+    ),
+    update_remote: bool = typer.Option(
+        False,
+        help="Whether to update the remote configuration or not. Default is False (i.e. update local config.json)",
+    ),
+) -> None:
+    """:warning: Analyze the data.
+
+    This command takes the various output files and joins them to the original data for
+    a "wide-form" datafile that is commonly used in data analysis.
+
+    This command will geocode data sources and save it to the data directory.
+
+    If `use_remote` is True, the remote configuration will be used. Otherwise, the local configuration will be used.
+    Configuration file required for
+
+    Unless you are me, you cannot `update_remote` because you do not have the correct permissions.
+
+    Expects the data to be fetched before running this command.
+    Expects the drugs to be extracted before running this command.
+    Expects the data to be geocoded before running this command.
+
+    Example: opendata-pipeline analyze --use-remote
+    """
+    settings = get_settings(remote=use_remote)
+    analyzer.run(settings=settings, update_remote=update_remote)
 
 
 @app.command("teardown")
