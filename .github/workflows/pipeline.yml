@@ -30,6 +30,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Install Poetry
+        run: pipx install poetry
+
       # setup python
       - name: Setup Python
         uses: actions/setup-python@v4
