@@ -53,7 +53,9 @@ jobs:
       - name: Run fetching
         # here we can read local (which is latest remote)
         # BUT we still need to update the remote
-        run: poetry run poetry run opendata-pipeline fetch --update-remote
+        # run: poetry run poetry run opendata-pipeline fetch --update-remote
+        # removed `--update-remote` flag while testing
+        run: poetry run poetry run opendata-pipeline fetch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
