@@ -106,6 +106,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: drug-files
+          path: data
 
       # install rust CLI program
       - name: Install Drug Extraction Toolbox
