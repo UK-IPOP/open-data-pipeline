@@ -14,7 +14,7 @@ on:
   # workflow_dispatch:
 
 # making executive decision to setup the project in multiple jobs so that we can run in parallel
-# as opposed to one `poetry install --no-dev` but sequential running
+# as opposed to one `poetry install --only main` but sequential running
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -43,7 +43,7 @@ jobs:
 
       # install latest version of CLI
       - name: Install Dependencies
-        run: poetry install --no-dev
+        run: poetry install --only main
 
       # initialize data dir
       - name: Initialize App
@@ -54,6 +54,8 @@ jobs:
         # here we can read local (which is latest remote)
         # BUT we still need to update the remote
         run: poetry run poetry run opendata-pipeline fetch --update-remote
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Drug Prep Artifact
         uses: actions/upload-artifact@v3
@@ -95,7 +97,7 @@ jobs:
 
       # install latest version of CLI
       - name: Install Dependencies
-        run: poetry install --no-dev
+        run: poetry install --only main
 
       # download drug_prep records (should be in data folder)
       - name: Download Drug Prep Artifact
@@ -150,7 +152,7 @@ jobs:
 
       # install latest version of CLI
       - name: Install Dependencies
-        run: poetry install --no-dev
+        run: poetry install --only main
 
       # download records (should be in data folder)
       - name: Download Records Artifact
@@ -200,7 +202,7 @@ jobs:
 
       # install latest version of CLI
       - name: Install Dependencies
-        run: poetry install --no-dev
+        run: poetry install --only main
 
       # install latest version of CLI
       - name: Install CLI
