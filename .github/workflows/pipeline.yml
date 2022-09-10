@@ -240,6 +240,9 @@ jobs:
       - name: Run analyzer
         run: poetry run opendata-pipeline analyze
 
+      - name: Install pandas-profiling
+        run: pipx install pandas-profiling
+
       - name: Run profiling
         run: ./scripts/profile.sh
 
