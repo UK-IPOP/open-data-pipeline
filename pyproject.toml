@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "opendata-pipeline"
-version = "0.1.1"
+version = "0.2.1"
 description = "A pipeline for processing open medical examier's data using GitHub Actions CI/CD."
 authors = ["Nick Anthony <nanthony007@gmail.com>"]
 license = "MIT"

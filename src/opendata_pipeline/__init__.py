@@ -7,3 +7,6 @@ from opendata_pipeline import (
     utils,
 )
 from opendata_pipeline.main import app
+
+
+__version__ = "0.2.0"
