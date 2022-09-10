@@ -275,6 +275,10 @@ jobs:
           name: release-assets
           path: assets
 
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
       # use a community action
       - name: Create Release
         uses: "marvinpinto/action-automatic-releases@latest"
@@ -284,7 +288,7 @@ jobs:
           automatic_release_tag: "latest"
           prerelease: false
           # uses today's date
-          title: "Data Release: ${{ date +'%Y-%m-%d' }}"
+          title: "Data Release: ${{ steps.date.outputs.date }}"
           files: |
             README.md
             LICENSE
