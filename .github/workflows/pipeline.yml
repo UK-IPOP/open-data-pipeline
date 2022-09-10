@@ -273,6 +273,7 @@ jobs:
         with:
           # should now be in assets folder
           name: release-assets
+          path: assets
 
       # use a community action
       - name: Create Release
@@ -281,9 +282,10 @@ jobs:
           # auto set by github
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
+          prerelease: false
           # uses today's date
-          title: "Data Release: {{ $(date +'%Y-%m-%d') }}"
+          title: "Data Release: ${{ date +'%Y-%m-%d' }}"
           files: |
             README.md
-            LICENSE.txt
+            LICENSE
             assets/*
