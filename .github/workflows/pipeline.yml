@@ -107,12 +107,20 @@ jobs:
         with:
           name: drug-files
           path: data
-
       # install rust CLI program
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+          profile: minimal
+
+      - name: Setup cache
+        id: cache-cargo
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargobin
+
       - name: Install Drug Extraction Toolbox
         run: cargo install drug-extraction-cli
 
