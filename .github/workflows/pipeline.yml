@@ -232,7 +232,13 @@ jobs:
       - name: Run analyzer
         run: poetry run opendata-pipeline analyze
 
-      - name: Prepare data for release job
+      - name: Run profiling
+        run: ./scripts/profile.sh
+
+      - name: Prepare Data for Release Assets
+        run: ./scripts/prepare_data_release.sh
+
+      - name: Upload assets artifact
         uses: actions/upload-artifact@v3
         with:
           name: release-assets
