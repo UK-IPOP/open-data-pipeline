@@ -122,7 +122,8 @@ jobs:
           key: ${{ runner.os }}-cargobin
 
       - name: Install Drug Extraction Toolbox
-        run: cargo install drug-extraction-cli
+        # use || true if already installed (in cache)
+        run: cargo install drug-extraction-cli || true
 
       - name: Run drug extraction
         # again we don't need to `--use-remote` because we checked it out
