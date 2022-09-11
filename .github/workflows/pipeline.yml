@@ -5,13 +5,11 @@ name: OpenData Pipeline
 
 # Controls when the workflow will run
 on:
-  push
-  # want to trigger on CRON or manually
-  # CRON....
-  # TODO: add CRON
+  schedule:
+    - cron: "0 5 * * 1"
 
-  # Allows you to run this workflow manually from the Actions tab
-  # workflow_dispatch:
+  # can do manually
+  workflow_dispatch:
 
 # making executive decision to setup the project in multiple jobs so that we can run in parallel
 # as opposed to one `poetry install --only main` but sequential running
@@ -53,9 +51,9 @@ jobs:
       - name: Run fetching
         # here we can read local (which is latest remote)
         # BUT we still need to update the remote
-        # run: poetry run opendata-pipeline fetch --update-remote
+        run: poetry run opendata-pipeline fetch --update-remote
         # removed `--update-remote` flag while testing
-        run: poetry run opendata-pipeline fetch
+        # run: poetry run opendata-pipeline fetch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

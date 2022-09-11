@@ -3,7 +3,7 @@
         {
             "name": "Cook County",
             "url": "https://datacatalog.cookcountyil.gov/api/odata/v4/cjeq-bs86",
-            "total_records": 10,
+            "total_records": 69255,
             "needs_pagination": false,
             "is_open_data": true,
             "drug_columns": [
@@ -34,7 +34,7 @@
         {
             "name": "San Diego County",
             "url": "https://data.sandiegocounty.gov/api/odata/v4/jkvb-n4p7",
-            "total_records": 10,
+            "total_records": 69596,
             "needs_pagination": false,
             "is_open_data": true,
             "drug_columns": [
@@ -48,7 +48,7 @@
         {
             "name": "Milwaukee County",
             "url": "https://lio.milwaukeecountywi.gov/arcgis/rest/services/MedicalExaminer/PublicDataAccess/MapServer/1/query?f=json&where=1%3D1&outFields=*&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outSR=102100",
-            "total_records": 10,
+            "total_records": 62571,
             "needs_pagination": true,
             "is_open_data": false,
             "drug_columns": [
