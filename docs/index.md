@@ -8,7 +8,6 @@ We currently fetch data from the following sources:
 - [San Diego Medical Examiner's Office](https://data.sandiegocounty.gov/Safety/Medical-Examiner-Cases/jkvb-n4p7)
 - [Milwaukee County Medical Examiner's Office](https://county.milwaukee.gov/EN/Medical-Examiner)
 
-
 The results of this data are used in various other analysis here on GitHub:
 
 - [Cook County](https://github.com/UK-IPOP/cook-county-analysis)
@@ -37,6 +36,9 @@ We utilize async methods to speed up the large number of web requests we make to
 > It is important to regularly fetch/pull from this repo to maintain an updated `config.json`
 
 We currently do not guarantee Windows support unfortunately. If you want to help make that a reality, please submit a new [Pull Request](https://github.com/UK-IPOP/open-data-pipeline/pulls)
+
+There is further API-documentation available on the GitHub Pages [website](https://uk-ipop.github.io/open-data-pipeline/) for this repo if you want to interact with the CLI.
+I would recommend using the docker image as it is easier to use and always referring to the CLI `--help` for more information.
 
 ### Workflow
 

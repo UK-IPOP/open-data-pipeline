@@ -37,6 +37,9 @@ We utilize async methods to speed up the large number of web requests we make to
 
 We currently do not guarantee Windows support unfortunately. If you want to help make that a reality, please submit a new [Pull Request](https://github.com/UK-IPOP/open-data-pipeline/pulls)
 
+There is further API-documentation available on the GitHub Pages [website](https://uk-ipop.github.io/open-data-pipeline/) for this repo if you want to interact with the CLI.
+I would recommend using the docker image as it is easier to use and always referring to the CLI `--help` for more information.
+
 ### Workflow
 
 The workflow can best be described by looking at the `pipeline.yml` file.
