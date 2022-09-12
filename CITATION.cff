@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software or the data, please cite it as below."
+authors:
+  - family-names: "Anthony"
+    given-names: "Nicholas"
+    orcid: "https://orcid.org/my-orcid?orcid=0000-0002-6692-3401"
+title: "Medical Examiner OpenData Pipeline"
+version: 0.2.1
+date-released: 2022-09-13
+url: "https://github.com/UK-IPOP/open-data-pipeline"
