@@ -138,6 +138,9 @@ async def get_geo_result(
     session: aiohttp.ClientSession, url: str, id_: int, data_source_name: str
 ) -> dict[str, Any] | None:
     async with session.get(url) as response:
+        # if returns error, try again
+        if response.status != 200:
+            return await get_geo_result(session, url, id_, data_source_name)
         json_data = await response.json()
         if results := json_data.get("candidates", None):
             best = results[0]

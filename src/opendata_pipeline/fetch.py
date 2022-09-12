@@ -41,6 +41,9 @@ async def get_record_set(
     session: aiohttp.ClientSession, url: str
 ) -> list[dict[str, typing.Any]]:
     async with session.get(url) as resp:
+        # if returns error, try again
+        if resp.status != 200:
+            return await get_record_set(session, url)
         resp_data: dict[str, typing.Any] = await resp.json()
         if "features" in resp_data:
             if len(resp_data["features"]) == 0:
