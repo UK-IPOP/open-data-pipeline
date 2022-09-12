@@ -54,7 +54,7 @@ def update_remote_config(config: models.Settings):
 
     # encode the file contents
     encoded = orjson.dumps(config.dict(exclude={"arcgis_api_key", "github_token"}))
-    data["content"] = base64.urlsafe_b64encode(encoded).decode()
+    data["content"] = base64.b64encode(encoded).decode("utf-8")
 
     resp = requests.put(url, headers=headers, json=data)
     if resp.status_code != 200:
