@@ -1,0 +1,8 @@
+site_name: OpenData Pipeline Docs
+
+theme:
+  name: "material"
+
+plugins:
+  - search
+  - mkdocstrings
