@@ -20,7 +20,6 @@ from opendata_pipeline import (
     geocode as geocoder,
     fetch as fetcher,
     analyze as analyzer,
-    spatial_join as spatial_joiner,
     utils,
 )
 
@@ -131,15 +130,6 @@ def geocode(
     """
     settings = get_settings(remote=use_remote)
     asyncio.run(geocoder.run(settings=settings, alternate_key=custom_key))
-
-
-@app.command()
-def spatial_join():
-    """Spatially join data sources.
-
-    Currently this command is a placeholder. It will be implemented in the future.
-    """
-    spatial_joiner.run()
 
 
 @app.command("analyze")

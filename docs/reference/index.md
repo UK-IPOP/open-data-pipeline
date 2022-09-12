@@ -8,6 +8,5 @@ library.  The API reference is split into several sections:
 - [extract_drugs](extract_drugs.md) - Extracting drug names from text
 - [analyze](analyze.md) - Analyzing and combining data
 - [manage_config](manage_config.md) - Managing configuration files
-- [spatial_join](spatial_join.md) - Spatially joining data (pending...)
 - [utils](utils.md) - Utility functions
 - [main](main.md) - The main CLI application
