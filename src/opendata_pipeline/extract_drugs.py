@@ -13,6 +13,7 @@ import requests
 import subprocess
 
 from opendata_pipeline import manage_config, models
+from opendata_pipeline.utils import console
 
 
 def fetch_drug_search_terms() -> dict[str, str]:
@@ -21,6 +22,7 @@ def fetch_drug_search_terms() -> dict[str, str]:
     Returns:
         dict[str, str]: a dictionary of search terms and their tags
     """
+    console.log("Fetching drug search terms from GitHub")
     url = "https://raw.githubusercontent.com/UK-IPOP/drug-extraction/main/de-workflow/data/drug_info.json"
     resp = requests.get(url)
     data = resp.json()
@@ -107,6 +109,10 @@ def run_drug_tool(
             search_words=terms,
         )
         # output is written to file
+
+        console.log(
+            f"Running drug extraction tool on {target_column} for {config.name}"
+        )
         subprocess.run(cmd)
         # so now we read the file using generators
         # could code this better
@@ -138,10 +144,10 @@ def run(settings: models.Settings) -> None:
 
     drug_results: list[dict[str, Any]] = []
     for data_source in settings.sources:
-        print(data_source)
         results = run_drug_tool(config=data_source, tag_lookup=search_terms)
         drug_results.extend(results)
 
+    console.log("Exporting drug data...")
     export_drug_output(drug_results=drug_results)
 
 

@@ -1,4 +1,4 @@
-"""This is the most important module in the package and contains the 
+"""This is the most important module in the package and contains the
 settings models and functions for loading and saving settings.
 
 The settings are stored in a JSON file in the user's home directory.

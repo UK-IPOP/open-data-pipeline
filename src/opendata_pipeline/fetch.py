@@ -14,6 +14,7 @@ from rich.progress import track
 
 
 from opendata_pipeline import manage_config, models
+from opendata_pipeline.utils import console
 
 
 # this pattern of accessing "value" is common to all opendata api responses
@@ -33,6 +34,7 @@ def get_open_data_records(
         list[dict[str, typing.Any]]: list of records
     """
     # we add 1000 assuming there were more records than last week
+    console.log(f"Fetching {config.name} records...")
     payload = {"$top": config.total_records + 1_000}
     response = requests.get(config.url, params=payload)
     data: dict[str, typing.Any] = response.json()
@@ -126,6 +128,7 @@ def export_drug_df(df: pd.DataFrame, config: models.DataSource) -> None:
 
 def export_jsonlines_from_df(df: pd.DataFrame, config: models.DataSource) -> None:
     """Export jsonlines from dataframe."""
+    console.log(f"Exporting {config.name} jsonlines...")
     out_path = Path("data") / config.records_filename
     df.to_json(out_path, orient="records", lines=True)
 
@@ -142,6 +145,7 @@ async def get_async_records(config: models.DataSource, current_index: int) -> in
     Returns:
         int: newly updated index
     """
+    console.log(f"Fetching {config.name} records...")
     async with aiohttp.ClientSession() as session:
         tasks = []
         # we add 2000 assuming there were more records than last week
@@ -158,7 +162,9 @@ async def get_async_records(config: models.DataSource, current_index: int) -> in
             record_set = await task
             records.extend(record_set)
 
-        print(f"Fetched {len(records):,} records asynchronously from {config.url}")
+        console.log(
+            f"Fetched {len(records):,} records asynchronously from {config.url}"
+        )
 
         df = make_df_with_identifier(records, current_index)
         export_drug_df(df, config)
@@ -203,6 +209,7 @@ def get_sync_records(config: models.DataSource, current_index: int) -> int:
     Returns:
         int: newly updated index
     """
+    console.log(f"Fetching {config.name} records...")
     records = get_open_data_records(config)
     df = make_df_with_identifier(records, current_index)
     if config.name == "Cook County":
@@ -223,7 +230,6 @@ async def run(settings: models.Settings, update_remote: bool = False) -> None:
     """
     total_records = 0
     for data_source in settings.sources:
-        print(data_source)
         if data_source.is_async:
             record_count = await get_async_records(
                 config=data_source, current_index=total_records
@@ -237,7 +243,7 @@ async def run(settings: models.Settings, update_remote: bool = False) -> None:
             data_source.total_records = record_count
             total_records += record_count
 
-    print(f"Total records fetched: {total_records:,}")
+    console.log(f"Total records fetched: {total_records:,}")
 
     if update_remote:
         manage_config.update_remote_config(config=settings)

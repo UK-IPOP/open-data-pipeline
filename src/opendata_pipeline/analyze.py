@@ -10,6 +10,7 @@ from pathlib import Path
 import pandas as pd
 
 from opendata_pipeline import manage_config, models
+from opendata_pipeline.utils import console
 
 
 def read_geocoded_data(source: models.DataSource) -> pd.DataFrame:
@@ -200,14 +201,16 @@ def run(settings: models.Settings) -> None:
         settings (models.Settings): The settings.
     """
     for data_source in settings.sources:
-        print(data_source.name)
 
         records_df = read_records(source=data_source)
-        print(records_df.shape)
+        console.log(
+            f"Read {len(records_df)} records from {data_source.records_filename}"
+        )
         drug_df = read_drug_data(source=data_source)
-        print(drug_df.shape)
+        console.log(f"Read {len(drug_df)} drug records for {data_source.name}")
+
         geocoded_df = read_geocoded_data(source=data_source)
-        print(geocoded_df.shape)
+        console.log(f"Read {len(geocoded_df)} geocoded records for {data_source.name}")
 
         # write a file for each analysis step for the data source
         # written into a folder for the data source so that we can zip
@@ -218,22 +221,17 @@ def run(settings: models.Settings) -> None:
         geocoded_df.reset_index().to_csv(data_dir / "geocoded.csv")
         # eventually add spatial
 
+        console.log("Combining data...")
         combined_df = combine(
             base_df=records_df,
             geo_df=geocoded_df,
             drug_df=drug_df,
         )
-        print(combined_df.shape)
-
-        # extract_plot_data(df=combined_df)
-        # if update remote, write to github, else local
-        # write plot_data
+        console.log(f"Combined data has {combined_df.shape} shape")
 
         cleaned_df = cleanup_columns(df=combined_df)
-        # should be same as above
-        print(cleaned_df.shape)
 
-        # write to csv
+        console.log("Writing combined data to csv...")
         cleaned_df.reset_index().to_csv(
             Path("data") / data_source.csv_filename, index=False
         )

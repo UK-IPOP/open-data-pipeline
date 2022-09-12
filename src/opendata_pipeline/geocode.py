@@ -12,6 +12,7 @@ import aiohttp
 import asyncio
 
 from opendata_pipeline import manage_config, models
+from opendata_pipeline.utils import console
 
 
 def read_records(config: models.DataSource) -> list[dict[str, Any]]:
@@ -21,6 +22,7 @@ def read_records(config: models.DataSource) -> list[dict[str, Any]]:
 
     Only return fields that are needed for geocoding.
     """
+    console.log(f"Reading records from file for {config.name}")
     if config.spatial_config is None:
         raise ValueError("spatial_config is required for geocoding")
     fields: list[str | None] = [
@@ -204,6 +206,7 @@ async def geocode_records(config: models.DataSource, key: str) -> list[dict[str,
     if config.spatial_config is None:
         raise ValueError("spatial_config is required for geocoding")
 
+    console.log(f"Geocoding {len(records)} records from {config.name}...")
     async with aiohttp.ClientSession() as session:
         tasks = []
         for record in records:
@@ -230,8 +233,8 @@ async def geocode_records(config: models.DataSource, key: str) -> list[dict[str,
             if result is not None:
                 results.append(result)
 
-            # this difference is due to cleaning
-    print(f"geocoded {len(results)} records out of {len(records)}")
+    # this difference is due to cleaning
+    print(f"Geocoded {len(results)} records out of {len(records)}")
     return results
 
 
@@ -251,12 +254,12 @@ async def run(settings: models.Settings, alternate_key: str | None) -> None:
 
     geocoded_results: list[dict[str, Any]] = []
     for data_source in settings.sources:
-        print(data_source)
 
         if data_source.needs_geocoding:
             source_set = await geocode_records(data_source, key)
             geocoded_results.extend(source_set)
 
+    console.log(f"Exporting {len(geocoded_results)} geocoded records")
     export_geocoded_results(geocoded_results)
 
 

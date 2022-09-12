@@ -14,10 +14,12 @@ import requests
 import base64
 
 from opendata_pipeline import models
+from opendata_pipeline.utils import console
 
 
 def get_local_config() -> models.Settings:
     """Get the config.json file from the project's root."""
+    console.log("Getting local config.json file")
     return models.Settings.parse_file("config.json")
 
 
@@ -26,6 +28,7 @@ def get_remote_config() -> models.Settings:
     url = (
         "https://raw.githubusercontent.com/UK-IPOP/open-data-pipeline/main/config.json"
     )
+    console.log("Getting remote config.json file")
     resp = requests.get(url)
     if resp.status_code != 200:
         raise ValueError(resp.content)
@@ -34,6 +37,7 @@ def get_remote_config() -> models.Settings:
 
 def update_local_config(config: models.Settings):
     """Update the local config.json file."""
+    console.log("Updating local config.json file")
     data = config.dict(exclude={"arcgis_api_key", "github_token"})
     with open(Path("config.json"), "w") as f:
         json.dump(data, f, indent=4)
@@ -62,6 +66,7 @@ def update_remote_config(config: models.Settings):
     encoded = orjson.dumps(config.dict(exclude={"arcgis_api_key", "github_token"}))
     data["content"] = base64.b64encode(encoded).decode("utf-8")
 
+    console.log("Updating remote config.json file")
     resp = requests.put(url, headers=headers, json=data)
     if resp.status_code != 200:
         raise ValueError(resp.content)

@@ -52,7 +52,9 @@ def get_settings(remote: bool) -> models.Settings:
 @app.command("init")
 def init():
     """Initialize the project by creating the data directory."""
+    utils.console.rule("[bold cyan]Initializing project")
     utils.setup()
+    utils.console.log("[bold green]Project initialization complete")
 
 
 @app.command("fetch")
@@ -78,8 +80,10 @@ def fetch(
 
     Example: opendata-pipeline fetch --use-remote
     """
+    utils.console.rule("[bold cyan]Fetching data")
     settings = get_settings(remote=use_remote)
     asyncio.run(fetcher.run(settings=settings, update_remote=update_remote))
+    utils.console.log("[bold green]Data fetching complete")
 
 
 @app.command("extract-drugs")
@@ -102,8 +106,10 @@ def extract_drugs(
 
     Example: opendata-pipeline extract-drugs --use-remote
     """
+    utils.console.rule("[bold cyan]Extracting drugs")
     settings = get_settings(remote=use_remote)
     drug_extractor.run(settings=settings)
+    utils.console.log("[bold green]Drug extraction complete!")
 
 
 @app.command("geocode")
@@ -128,8 +134,10 @@ def geocode(
 
     Example: opendata-pipeline geocode --use-remote
     """
+    utils.console.rule("[bold cyan]Geocoding data")
     settings = get_settings(remote=use_remote)
     asyncio.run(geocoder.run(settings=settings, alternate_key=custom_key))
+    utils.console.log("[bold green]Geocoding complete!")
 
 
 @app.command("analyze")
@@ -161,14 +169,18 @@ def analyze(
 
     Example: opendata-pipeline analyze --use-remote
     """
+    utils.console.rule("[bold cyan]Analyzing data")
     settings = get_settings(remote=use_remote)
     analyzer.run(settings=settings)
+    utils.console.log("[bold green]Analysis complete!")
 
 
 @app.command("teardown")
 def teardown():
     """Teardown the project, deleting all data files."""
+    utils.console.rule("[bold cyan]Tearing down project")
     utils.teardown()
+    utils.console.log("[bold green]Project torn down successfully")
 
 
 if __name__ == "__main__":
