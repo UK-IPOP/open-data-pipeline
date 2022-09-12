@@ -14,16 +14,16 @@ from opendata_pipeline import manage_config, models
 
 # this pattern of accessing "value" is common to all opendata api responses
 def get_open_data_records(
-    opts: models.DataSource,
+    config: models.DataSource,
 ) -> list[dict[str, typing.Any]]:
     """Get records from open data portal."""
     # we add 1000 assuming there were more records than last week
-    payload = {"$top": opts.total_records + 1_000}
-    response = requests.get(opts.url, params=payload)
+    payload = {"$top": config.total_records + 1_000}
+    response = requests.get(config.url, params=payload)
     data: dict[str, typing.Any] = response.json()
     if "value" not in data:
         raise ValueError(
-            f"Unable to get records from {opts.url}, `value` key not in response"
+            f"Unable to get records from {config.url}, `value` key not in response"
         )
     return data["value"]
 
@@ -62,25 +62,25 @@ def make_df_with_identifier(
 
 
 # TODO: remove this when we can read jsonlines in drug tool
-def export_drug_df(df: pd.DataFrame, opts: models.DataSource) -> None:
+def export_drug_df(df: pd.DataFrame, config: models.DataSource) -> None:
     """Export drug dataframe to csv."""
-    target_cols = ["CaseIdentifier"] + opts.drug_columns
-    out_path = Path("data") / opts.drug_prep_filename
+    target_cols = ["CaseIdentifier"] + config.drug_columns
+    out_path = Path("data") / config.drug_prep_filename
     df.loc[:, target_cols].to_csv(out_path, index=False)
 
 
-def export_jsonlines_from_df(df: pd.DataFrame, opts: models.DataSource) -> None:
+def export_jsonlines_from_df(df: pd.DataFrame, config: models.DataSource) -> None:
     """Export jsonlines from dataframe."""
-    out_path = Path("data") / opts.records_filename
+    out_path = Path("data") / config.records_filename
     df.to_json(out_path, orient="records", lines=True)
 
 
-async def get_async_records(opts: models.DataSource, current_index: int) -> int:
+async def get_async_records(config: models.DataSource, current_index: int) -> int:
     async with aiohttp.ClientSession() as session:
         tasks = []
         # we add 2000 assuming there were more records than last week
-        for offset in range(0, opts.total_records + 2000, 1000):
-            url = build_url(base_url=opts.url, offset=offset)
+        for offset in range(0, config.total_records + 2000, 1000):
+            url = build_url(base_url=config.url, offset=offset)
             tasks.append(asyncio.ensure_future(get_record_set(session, url)))
 
         records = []
@@ -92,11 +92,11 @@ async def get_async_records(opts: models.DataSource, current_index: int) -> int:
             record_set = await task
             records.extend(record_set)
 
-        print(f"Fetched {len(records):,} records asynchronously from {opts.url}")
+        print(f"Fetched {len(records):,} records asynchronously from {config.url}")
 
         df = make_df_with_identifier(records, current_index)
-        export_drug_df(df, opts)
-        export_jsonlines_from_df(df, opts)
+        export_drug_df(df, config)
+        export_jsonlines_from_df(df, config)
         return len(records)
 
 
@@ -126,14 +126,14 @@ def cook_county_drug_col(df: pd.DataFrame) -> pd.DataFrame:
     return dff
 
 
-def get_sync_records(opts: models.DataSource, current_index: int) -> int:
-    records = get_open_data_records(opts)
+def get_sync_records(config: models.DataSource, current_index: int) -> int:
+    records = get_open_data_records(config)
     df = make_df_with_identifier(records, current_index)
-    if opts.name == "Cook County":
+    if config.name == "Cook County":
         # create composite drug column
         df = cook_county_drug_col(df)
-    export_drug_df(df, opts)
-    export_jsonlines_from_df(df, opts)
+    export_drug_df(df, config)
+    export_jsonlines_from_df(df, config)
     return len(records)
 
 
@@ -144,13 +144,13 @@ async def run(settings: models.Settings, update_remote: bool = False) -> None:
         print(data_source)
         if data_source.is_async:
             record_count = await get_async_records(
-                opts=data_source, current_index=total_records
+                config=data_source, current_index=total_records
             )
             data_source.total_records = record_count
             total_records += record_count
         else:
             record_count = get_sync_records(
-                opts=data_source, current_index=total_records
+                config=data_source, current_index=total_records
             )
             data_source.total_records = record_count
             total_records += record_count

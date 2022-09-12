@@ -32,21 +32,21 @@ from opendata_pipeline import manage_config, models
 # city sub???
 
 
-def read_records(opts: models.DataSource) -> list[dict[str, Any]]:
-    if opts.spatial_config is None:
+def read_records(config: models.DataSource) -> list[dict[str, Any]]:
+    if config.spatial_config is None:
         raise ValueError("spatial_config is required for geocoding")
     fields: list[str | None] = [
         "CaseIdentifier",
-        opts.spatial_config.lat_field,
-        opts.spatial_config.lon_field,
-        opts.spatial_config.address_fields.street,
-        opts.spatial_config.address_fields.city,
-        opts.spatial_config.address_fields.state,
-        opts.spatial_config.address_fields.zip,
+        config.spatial_config.lat_field,
+        config.spatial_config.lon_field,
+        config.spatial_config.address_fields.street,
+        config.spatial_config.address_fields.city,
+        config.spatial_config.address_fields.state,
+        config.spatial_config.address_fields.zip,
     ]
 
     records: list[dict[str, Any]] = []
-    with open(Path("data") / opts.records_filename, "r") as f:
+    with open(Path("data") / config.records_filename, "r") as f:
         for line in f:
             line_data = orjson.loads(line)
             filtered_data = {
@@ -54,9 +54,9 @@ def read_records(opts: models.DataSource) -> list[dict[str, Any]]:
                 for k, v in line_data.items()
                 if k in {f for f in fields if f is not None}
             }
-            lat_value = filtered_data[opts.spatial_config.lat_field]
-            lon_value = filtered_data[opts.spatial_config.lon_field]
-            street_value = filtered_data[opts.spatial_config.address_fields.street]
+            lat_value = filtered_data[config.spatial_config.lat_field]
+            lon_value = filtered_data[config.spatial_config.lon_field]
+            street_value = filtered_data[config.spatial_config.address_fields.street]
             # if value is 0 or None, we need to geocode
             # otherwise we can skip
             if (
@@ -88,12 +88,12 @@ def clean_address_string(s: str) -> str | None:
 
 
 def prepare_address(
-    record: dict[str, Any], opts: models.DataSource
+    record: dict[str, Any], config: models.DataSource
 ) -> tuple[Any, dict[str, Any]] | None:
-    if opts.spatial_config is None:
+    if config.spatial_config is None:
         raise ValueError("spatial_config is required for geocoding")
 
-    address_config = opts.spatial_config.address_fields
+    address_config = config.spatial_config.address_fields
     if address_config.street is None:
         raise ValueError("street field is required for geocoding")
     if address_config.city is None and address_config.zip is None:
@@ -155,24 +155,24 @@ async def get_geo_result(
     return None
 
 
-async def geocode_records(opts: models.DataSource, key: str) -> list[dict[str, Any]]:
-    records = read_records(opts)
-    if opts.spatial_config is None:
+async def geocode_records(config: models.DataSource, key: str) -> list[dict[str, Any]]:
+    records = read_records(config)
+    if config.spatial_config is None:
         raise ValueError("spatial_config is required for geocoding")
 
     async with aiohttp.ClientSession() as session:
         tasks = []
         for record in records:
-            data = prepare_address(record, opts)
+            data = prepare_address(record, config)
             if data is None:
                 continue
             id_, address_data = data
             url = build_url(
-                bounds=opts.spatial_config.bounds, address_data=address_data, key=key
+                bounds=config.spatial_config.bounds, address_data=address_data, key=key
             )
             tasks.append(
                 get_geo_result(
-                    session=session, url=url, id_=id_, data_source_name=opts.name
+                    session=session, url=url, id_=id_, data_source_name=config.name
                 )
             )
 
@@ -180,7 +180,7 @@ async def geocode_records(opts: models.DataSource, key: str) -> list[dict[str, A
         for task in track(
             asyncio.as_completed(tasks),
             total=len(tasks),
-            description=f"Geocoding records for {opts.name}",
+            description=f"Geocoding records for {config.name}",
         ):
             result: dict[str, Any] | None = await task
             if result is not None:

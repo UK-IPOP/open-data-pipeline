@@ -59,7 +59,7 @@ def enhance_drug_output(
 
 
 def run_drug_tool(
-    opts: models.DataSource, tag_lookup: dict[str, str]
+    config: models.DataSource, tag_lookup: dict[str, str]
 ) -> list[dict[str, Any]]:
     # mostly this is replicating de-workflow code but we don't want ALL of those features
     # and the added dependencies so we just rewrite it here
@@ -67,9 +67,9 @@ def run_drug_tool(
 
     drug_results: list[dict[str, Any]] = []
 
-    for column_level, target_column in enumerate(opts.drug_columns):
+    for column_level, target_column in enumerate(config.drug_columns):
         # TODO: adjust this when we can read jsonlines in drug tool
-        in_file = Path("data") / opts.drug_prep_filename
+        in_file = Path("data") / config.drug_prep_filename
         cmd = command(
             input_fpath=in_file.as_posix(),
             target_column=target_column,
@@ -82,7 +82,7 @@ def run_drug_tool(
         for record in read_drug_output():
             enhanced_records = enhance_drug_output(
                 record=record,
-                data_source=opts.name,
+                data_source=config.name,
                 target_column=target_column,
                 column_level=column_level,
                 tag_lookup=tag_lookup,
@@ -106,7 +106,7 @@ def run(settings: models.Settings) -> None:
     drug_results: list[dict[str, Any]] = []
     for data_source in settings.sources:
         print(data_source)
-        results = run_drug_tool(opts=data_source, tag_lookup=search_terms)
+        results = run_drug_tool(config=data_source, tag_lookup=search_terms)
         drug_results.extend(results)
 
     export_drug_output(drug_results=drug_results)
