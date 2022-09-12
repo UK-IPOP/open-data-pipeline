@@ -1,3 +1,11 @@
+"""This module contains the logic for analyzing the data.
+
+It is responsible for combining the data from the different sources and
+converting into wide format for analysis.
+
+You can actually run this as a script directly from the command line if you cloned the repo.
+"""
+
 from pathlib import Path
 import pandas as pd
 
@@ -5,6 +13,18 @@ from opendata_pipeline import manage_config, models
 
 
 def read_geocoded_data(source: models.DataSource) -> pd.DataFrame:
+    """Reads the geocoded data from the data directory.
+
+    Sets the index to `CaseIdentifier`, and handles some minor column renaming.
+
+    Only returns the data for the given source (i.e. filtered).
+
+    Args:
+        source (models.DataSource): The source to read.
+
+    Returns:
+        pd.DataFrame: The geocoded data.
+    """
     # expects geocoding to be done and file to be in
     # data/geocoded_data.jsonl
     # returns filtered data to save memory
@@ -21,6 +41,18 @@ def read_geocoded_data(source: models.DataSource) -> pd.DataFrame:
 
 
 def read_drug_data(source: models.DataSource) -> pd.DataFrame:
+    """Reads the drug data from the data directory.
+
+    Sets the index to `CaseIdentifier`/`record_id`, and handles some minor column renaming.
+
+    Only returns the data for the given source (i.e. filtered).
+
+    Args:
+        source (models.DataSource): The source to read.
+
+    Returns:
+        pd.DataFrame: The drug data.
+    """
     df = (
         pd.read_json(
             Path("data") / "drug_data.jsonl",
@@ -37,6 +69,17 @@ def read_drug_data(source: models.DataSource) -> pd.DataFrame:
 
 
 def join_geocoded_data(base_df: pd.DataFrame, geo_df: pd.DataFrame) -> pd.DataFrame:
+    """Joins the geocoded data to the base data.
+
+    Merges on index
+
+    Args:
+        base_df (pd.DataFrame): The base data.
+        geo_df (pd.DataFrame): The geocoded data.
+
+    Returns:
+        pd.DataFrame: The joined data.
+    """
     # merge on index
     # expects CaseIdentifier to be the index
     merged_df = pd.merge(
@@ -50,6 +93,7 @@ def join_geocoded_data(base_df: pd.DataFrame, geo_df: pd.DataFrame) -> pd.DataFr
 
 
 def read_records(source: models.DataSource) -> pd.DataFrame:
+    """Reads the records from the data directory, sets index to `CaseIdentifier`."""
     df = pd.read_json(
         Path("data") / f"{source.records_filename}",
         lines=True,
@@ -60,6 +104,14 @@ def read_records(source: models.DataSource) -> pd.DataFrame:
 
 
 def make_wide(df: pd.DataFrame) -> pd.DataFrame:
+    """Converts the drug data from long to wide format.
+
+    Args:
+        df (pd.DataFrame): The drug data.
+
+    Returns:
+        pd.DataFrame: The drug data in wide format.
+    """
     # expects drug_df to have CaseIdentifier as index
     records: dict[str, dict[str, int]] = {}
     for row in df.reset_index().to_dict(orient="records"):
@@ -85,6 +137,15 @@ def make_wide(df: pd.DataFrame) -> pd.DataFrame:
 def merge_wide_drugs_to_records(
     base_df: pd.DataFrame, wide_drug_df: pd.DataFrame
 ) -> pd.DataFrame:
+    """Merges the wide drug data to the base data (on index).
+
+    Args:
+        base_df (pd.DataFrame): The base data.
+        wide_drug_df (pd.DataFrame): The wide drug data.
+
+    Returns:
+        pd.DataFrame: The joined data.
+    """
     # merge on index
     # expects CaseIdentifier to be the index for BOTH
     return pd.merge(
@@ -101,6 +162,18 @@ def combine(
     geo_df: pd.DataFrame,
     drug_df: pd.DataFrame,
 ) -> pd.DataFrame:
+    """Combines the data into a single dataframe.
+
+    This function calls `make_wide`, `merge_wide_drugs_to_records`, and `join_geocoded_data`.
+
+    Args:
+        base_df (pd.DataFrame): The base data.
+        geo_df (pd.DataFrame): The geocoded data.
+        drug_df (pd.DataFrame): The drug data.
+
+    Returns:
+        pd.DataFrame: The combined data.
+    """
     wide_drug_df = make_wide(df=drug_df)
     records_wide_drugs = merge_wide_drugs_to_records(
         base_df=base_df, wide_drug_df=wide_drug_df
@@ -110,21 +183,22 @@ def combine(
 
 
 def cleanup_columns(df: pd.DataFrame):
+    """Cleans up the column names IN PLACE.
+
+    Args:
+        df (pd.DataFrame): The data.
+    """
     # drop columns we don't need?
     # lowercase columns
     return df.rename(columns={col: col.lower().replace(" ", "_") for col in df.columns})
 
 
-def extract_plot_data(df: pd.DataFrame):
-    # extract data for plotting
-    # expects combined df BEFORE cleanup_columns
-    # return a list of dicts in chartjs format... expecting to write to json
-
-    # return df
-    pass
-
-
 def run(settings: models.Settings) -> None:
+    """Runs the data processing.
+
+    Args:
+        settings (models.Settings): The settings.
+    """
     for data_source in settings.sources:
         print(data_source.name)
 

@@ -1,3 +1,7 @@
+"""This module contains functions for fetching data from the open data portal or other sources.
+
+It uses async requests if not using the open data portal to speed things up.
+"""
 from __future__ import annotations
 
 from pathlib import Path
@@ -16,7 +20,18 @@ from opendata_pipeline import manage_config, models
 def get_open_data_records(
     config: models.DataSource,
 ) -> list[dict[str, typing.Any]]:
-    """Get records from open data portal."""
+    """Get records from open data portal.
+
+    This is a synchronous request.
+
+    It sets the total to 1000 + the data source current total.
+
+    Args:
+        config: DataSource object
+
+    Returns:
+        list[dict[str, typing.Any]]: list of records
+    """
     # we add 1000 assuming there were more records than last week
     payload = {"$top": config.total_records + 1_000}
     response = requests.get(config.url, params=payload)
@@ -29,7 +44,17 @@ def get_open_data_records(
 
 
 def build_url(offset: int, base_url: str) -> str:
-    """Build url for pagination."""
+    """Build url for pagination.
+
+    Adds resultOffset and resultRecordCount to url.
+
+    Args:
+        offset: int
+        base_url: str
+
+    Returns:
+        str: url
+    """
     # add 1000 record limit and offset params
     return f"{base_url}&resultRecordCount=1000&resultOffset={offset}"
 
@@ -40,6 +65,19 @@ def build_url(offset: int, base_url: str) -> str:
 async def get_record_set(
     session: aiohttp.ClientSession, url: str
 ) -> list[dict[str, typing.Any]]:
+    """Get record set from url.
+
+    An async function to get a record set from a url.
+
+    If fails, retries.
+
+    Args:
+        session: aiohttp.ClientSession
+        url: str
+
+    Returns:
+        list[dict[str, typing.Any]]: list of records
+    """
     async with session.get(url) as resp:
         # if returns error, try again
         if resp.status != 200:
@@ -55,7 +93,17 @@ async def get_record_set(
 def make_df_with_identifier(
     records: list[dict[str, typing.Any]], current_index: int
 ) -> pd.DataFrame:
-    """Make dataframe with case identifier."""
+    """Make dataframe with case identifier.
+
+    Uses the current index to label records with a global identifier.
+
+    Args:
+        records: list[dict[str, typing.Any]]
+        current_index: int
+
+    Returns:
+        pd.DataFrame: dataframe with case identifier
+    """
     df = pd.DataFrame(records)
     df["CaseIdentifier"] = df.index + current_index
     return df
@@ -63,7 +111,14 @@ def make_df_with_identifier(
 
 # TODO: remove this when we can read jsonlines in drug tool
 def export_drug_df(df: pd.DataFrame, config: models.DataSource) -> None:
-    """Export drug dataframe to csv."""
+    """Export drug dataframe to csv.
+
+    This is a temporary function to export a csv for the drug tool.
+
+    Args:
+        df (pd.DataFrame): Drug Output dataframe
+        config (models.DataSource): DataSource object
+    """
     target_cols = ["CaseIdentifier"] + config.drug_columns
     out_path = Path("data") / config.drug_prep_filename
     df.loc[:, target_cols].to_csv(out_path, index=False)
@@ -76,6 +131,17 @@ def export_jsonlines_from_df(df: pd.DataFrame, config: models.DataSource) -> Non
 
 
 async def get_async_records(config: models.DataSource, current_index: int) -> int:
+    """Get records from url.
+
+    This is an async function to get records from a url for each dataset.
+
+    Args:
+        config: DataSource object
+        current_index: int
+
+    Returns:
+        int: newly updated index
+    """
     async with aiohttp.ClientSession() as session:
         tasks = []
         # we add 2000 assuming there were more records than last week
@@ -127,6 +193,16 @@ def cook_county_drug_col(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def get_sync_records(config: models.DataSource, current_index: int) -> int:
+    """Get records from url synchronously.
+
+    This is a synchronous function to get records from a url for each dataset.
+
+    Args:
+        config: DataSource object
+
+    Returns:
+        int: newly updated index
+    """
     records = get_open_data_records(config)
     df = make_df_with_identifier(records, current_index)
     if config.name == "Cook County":
@@ -138,7 +214,13 @@ def get_sync_records(config: models.DataSource, current_index: int) -> int:
 
 
 async def run(settings: models.Settings, update_remote: bool = False) -> None:
-    """Fetch records from open data portal."""
+    """Fetch records from open data portal.
+
+    Args:
+        settings (models.Settings): Settings object
+        update_remote (bool): whether to update the remote config.json or not
+
+    """
     total_records = 0
     for data_source in settings.sources:
         print(data_source)

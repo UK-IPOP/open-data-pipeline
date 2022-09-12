@@ -9,4 +9,4 @@ from opendata_pipeline import (
 from opendata_pipeline.main import app
 
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"

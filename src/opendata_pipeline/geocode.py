@@ -1,3 +1,7 @@
+"""This module handles geocoding of records.
+
+It utilizes the ArcGIS geocoding API and asyncio to speed up the process.
+"""
 from __future__ import annotations
 
 from pathlib import Path
@@ -9,30 +13,14 @@ import asyncio
 
 from opendata_pipeline import manage_config, models
 
-# TODO: do we want to add average distance to other points?
-# - this could be some sort of analysis of the data that is produced but not put in the file
-# descriptive of distances
-
-# FURTHER:
-# the arcgis module seems to have the ability to do geocoding, spatial joins, and I'm sure distances
-# should we just use this for everything?
-# we also have the option of ArcPy
-# let's just focus on geocoding for now
-
-# each place needs a unique reader and cleaner since they have different column for the addresses
-# we could read this in from a config file but that seems like overkill for now
-
-# we would also ideally want batch geocoding to work
-# # only returns 1 geocoder (without indexing) -- ArcGIS World GeoCoding Service
-# geocoder = get_geocoders(gis)[0]
-
-# # generally seems MAX batch size is 1000
-# # but we can use `suggested` for now
-# suggested_batch_size: int = geocoder.properties.locatorProperties.SuggestedBatchSize
-# city sub???
-
 
 def read_records(config: models.DataSource) -> list[dict[str, Any]]:
+    """Read records from file.
+
+    Only reads records that have not been geocoded.
+
+    Only return fields that are needed for geocoding.
+    """
     if config.spatial_config is None:
         raise ValueError("spatial_config is required for geocoding")
     fields: list[str | None] = [
@@ -71,7 +59,18 @@ def read_records(config: models.DataSource) -> list[dict[str, Any]]:
 
 
 def clean_address_string(s: str) -> str | None:
-    """Clean street."""
+    """Clean street.
+
+    Removes any non-alphanumeric characters.
+
+    Returns None if the string is empty after cleaning.
+
+    Args:
+        s (str): The string to clean.
+
+    Returns:
+        str | None: The cleaned string or None if the string is empty.
+    """
     if s is None:
         return None
     s = s.lower().strip()
@@ -90,6 +89,14 @@ def clean_address_string(s: str) -> str | None:
 def prepare_address(
     record: dict[str, Any], config: models.DataSource
 ) -> tuple[Any, dict[str, Any]] | None:
+    """Prepare address for geocoding.
+
+    Args:
+        record (dict[str, Any]): The record to prepare.
+
+    Returns:
+        tuple[Any, dict[str, Any]] | None: The id and address data or None if the address is invalid.
+    """
     if config.spatial_config is None:
         raise ValueError("spatial_config is required for geocoding")
 
@@ -117,6 +124,7 @@ def prepare_address(
 
 
 def export_geocoded_results(data: list[dict[str, Any]]) -> None:
+    """Export geocoded results to file."""
     with open(Path("data") / "geocoded_data.jsonl", "w") as f:
         for record in data:
             f.write(orjson.dumps(record).decode("utf-8") + "\n")
@@ -125,6 +133,18 @@ def export_geocoded_results(data: list[dict[str, Any]]) -> None:
 def build_url(
     bounds: models.GeoBounds, address_data: dict[str, str | int | None], key: str
 ) -> str:
+    """Build the geocoding url.
+
+    This uses the hardcoded `fat_url` and inserts the token (`key`) and then encodes the bounds and address data.
+
+    Args:
+        bounds (models.GeoBounds): The (rectangular) bounds to use for the geocoding.
+        address_data (dict[str, str | int | None]): The address data to use for the geocoding.
+        key (str): The ArcGIS token.
+
+    Returns:
+        str: The geocoding url.
+    """
     fat_url = f"https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&outFields=none&outSR=4326&token={key}&forStorage=false&locationType=street&sourceCounty=USA&maxLocations=1&maxOutOfRange=false"
 
     # combines values that we have
@@ -137,6 +157,21 @@ def build_url(
 async def get_geo_result(
     session: aiohttp.ClientSession, url: str, id_: int, data_source_name: str
 ) -> dict[str, Any] | None:
+    """Get the geocoding result from an async web request to ArcGIS.
+
+    If the request returns 200, will retry.
+
+    Will return None otherwise.
+
+    Args:
+        session (aiohttp.ClientSession): The aiohttp session to use for the request.
+        url (str): The url to use for the request.
+        id_ (int): The id of the record being geocoded.
+        data_source_name (str): The name of the data source being geocoded.
+
+    Returns:
+        dict[str, Any] | None: The geocoding result or None if the request failed.
+    """
     async with session.get(url) as response:
         # if returns error, try again
         if response.status != 200:
@@ -156,6 +191,15 @@ async def get_geo_result(
 
 
 async def geocode_records(config: models.DataSource, key: str) -> list[dict[str, Any]]:
+    """Geocode records for the data source.
+
+    Args:
+        config (models.DataSource): The data source config.
+        key (str): The ArcGIS token.
+
+    Returns:
+        list[dict[str, Any]]: The geocoded records.
+    """
     records = read_records(config)
     if config.spatial_config is None:
         raise ValueError("spatial_config is required for geocoding")
@@ -192,6 +236,7 @@ async def geocode_records(config: models.DataSource, key: str) -> list[dict[str,
 
 
 async def run(settings: models.Settings, alternate_key: str | None) -> None:
+    """Run the geocoding process."""
     if settings.arcgis_api_key is None and alternate_key is None:
         raise ValueError(
             "arcgis_api_key is required for geocoding. Consider using the --alternate-key flag"

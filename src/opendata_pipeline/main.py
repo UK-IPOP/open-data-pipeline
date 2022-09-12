@@ -1,3 +1,9 @@
+"""This module contains the main CLI (Typer) app.
+
+The app is defined in the `app` variable. The `main` function is the entry point
+for the CLI app.
+"""
+
 from __future__ import annotations
 
 import asyncio
@@ -19,15 +25,26 @@ from opendata_pipeline import (
 )
 
 APP_NAME = "opendata-pipeline"
+"""Application name for the CLI app."""
+
 
 app = typer.Typer(
     name=APP_NAME,
     help="A command line tool for running the UK-IPOP Medical Examiner's Open Data Pipeline.",
     rich_markup_mode="rich",
 )
+"""The Typer CLI app."""
 
 
 def get_settings(remote: bool) -> models.Settings:
+    """Get the settings for the app.
+
+    Args:
+        remote (bool): Whether or not to use the remote config.
+
+    Returns:
+        models.Settings: The settings for the app.
+    """
     if remote:
         return manage_config.get_remote_config()
     return manage_config.get_local_config()
@@ -35,7 +52,7 @@ def get_settings(remote: bool) -> models.Settings:
 
 @app.command("init")
 def init():
-    """Initialize the project"""
+    """Initialize the project by creating the data directory."""
     utils.setup()
 
 

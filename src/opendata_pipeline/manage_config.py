@@ -1,3 +1,11 @@
+"""This module manages the config.json file.
+
+It is used to update the config.json file on GitHub.
+
+The config.json file is used to store the configuration for the pipeline.
+
+It can also update a local config.json file.
+"""
 from datetime import date
 import json
 from pathlib import Path
@@ -6,8 +14,6 @@ import requests
 import base64
 
 from opendata_pipeline import models
-
-# functions to update local and remote data
 
 
 def get_local_config() -> models.Settings:
@@ -34,7 +40,7 @@ def update_local_config(config: models.Settings):
 
 
 def update_remote_config(config: models.Settings):
-    """Update the remote config.json file."""
+    """Update the remote config.json file using the GitHub API."""
     if config.github_token is None:
         raise ValueError("github_token is required to update remote config")
     url = "https://api.github.com/repos/UK-IPOP/open-data-pipeline/contents/config.json"

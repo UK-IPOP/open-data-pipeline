@@ -1,3 +1,9 @@
+"""This module extracts drugs from the records.
+
+It utilizes the drug columns (in order) listed in the config file (config.json).
+
+It also requires you to have the [drug extraction tool](https://github.com/UK-IPOP/drug-extraction) installed.
+"""
 from __future__ import annotations
 from pathlib import Path
 
@@ -10,6 +16,11 @@ from opendata_pipeline import manage_config, models
 
 
 def fetch_drug_search_terms() -> dict[str, str]:
+    """Fetch drug search terms from the remote github repo.
+
+    Returns:
+        dict[str, str]: a dictionary of search terms and their tags
+    """
     url = "https://raw.githubusercontent.com/UK-IPOP/drug-extraction/main/de-workflow/data/drug_info.json"
     resp = requests.get(url)
     data = resp.json()
@@ -17,6 +28,16 @@ def fetch_drug_search_terms() -> dict[str, str]:
 
 
 def command(input_fpath: str, target_column: str, search_words: str) -> list[str]:
+    """Build the command to run the drug extraction tool.
+
+    Args:
+        input_fpath (str): path to the input file
+        target_column (str): the column to search
+        search_words (str): the search terms
+
+    Returns:
+        list[str]: the command (list) to run
+    """
     return [
         "extract-drugs",
         "simple-search",
@@ -38,6 +59,7 @@ def command(input_fpath: str, target_column: str, search_words: str) -> list[str
 
 
 def read_drug_output() -> Generator[dict[str, Any], None, None]:
+    """Read the drug output file and yield each record."""
     with open("extracted_drugs.jsonl", "r") as f:
         for line in f:
             yield orjson.loads(line)
@@ -61,6 +83,15 @@ def enhance_drug_output(
 def run_drug_tool(
     config: models.DataSource, tag_lookup: dict[str, str]
 ) -> list[dict[str, Any]]:
+    """Run the drug extraction tool.
+
+    Args:
+        config (models.DataSource): the data source config
+        tag_lookup (dict[str, str]): the drug search terms
+
+    Returns:
+        list[dict[str, Any]]: the drug results
+    """
     # mostly this is replicating de-workflow code but we don't want ALL of those features
     # and the added dependencies so we just rewrite it here
     terms = "|".join(tag_lookup.keys())
@@ -95,12 +126,14 @@ def run_drug_tool(
 
 
 def export_drug_output(drug_results: list[dict[str, Any]]) -> None:
+    """Export the drug output to a file."""
     with open(Path("data") / "drug_data.jsonl", "w") as f:
         for record in drug_results:
             f.write(orjson.dumps(record).decode("utf-8") + "\n")
 
 
 def run(settings: models.Settings) -> None:
+    """Run the drug extraction tool."""
     search_terms = fetch_drug_search_terms()
 
     drug_results: list[dict[str, Any]] = []
