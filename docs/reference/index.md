@@ -1,4 +1,4 @@
-# API Reference
+# Getting Started
 
 This section contains the API reference for all the core functionality of the
 library.  The API reference is split into several sections:
