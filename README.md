@@ -81,3 +81,20 @@ Help me write some tests!
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## BibTex Citation
+
+If you use this software or the enhanced data, please cite this repository:
+
+```
+@software{Anthony_Medical_Examiner_OpenData_2022,
+  author = {Anthony, Nicholas},
+  month = {9},
+  title = {{Medical Examiner OpenData Pipeline}},
+  url = {https://github.com/UK-IPOP/open-data-pipeline},
+  version = {0.2.1},
+  year = {2022}
+}
+```
+
+Thank you.
