@@ -1,5 +1,8 @@
 # Medical Examiner Open Data Pipeline
 
+[![Pipeline](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pipeline.yml/badge.svg?branch=main)](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pipeline.yml)
+[![Docs](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pages/pages-build-deployment)
+
 This repository contains the code for the Medical Examiner Open Data Pipeline.
 
 We currently fetch data from the following sources:
