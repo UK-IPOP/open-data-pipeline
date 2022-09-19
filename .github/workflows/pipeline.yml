@@ -240,7 +240,7 @@ jobs:
         run: poetry run opendata-pipeline analyze
 
       - name: Install pandas-profiling
-        run: pipx install pandas-profiling
+        run: pipx install --python python3.10 --spec PACKAGE=3.2.0 pandas-profiling
 
       - name: Run profiling
         run: ./scripts/profile.sh
