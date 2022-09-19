@@ -12,8 +12,7 @@ for file in data/*_records.jsonl; do
 
     pandas_profiling $file "reports/$title.html" \
         --title "Pandas Profiling Report for $title" \
-        --silent \
-        --minimal  # switch to minimal mode because normal took ~20 minutes
+        --silent --minimal  # switch to minimal mode because normal took ~20 minutes
 
 done
 
