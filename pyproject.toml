@@ -10,7 +10,7 @@ packages = [
 ]
 
 [tool.poetry.scripts]
-opendata-pipeline = "opendata_pipeline:app"
+opendata-pipeline = "opendata_pipeline.main:app"
 
 [tool.poetry.dependencies]
 python = "^3.10"
