@@ -45,15 +45,15 @@ jobs:
 
       # initialize data dir
       - name: Initialize App
-        run: poetry run opendata-pipeline init
+        run: opendata-pipeline init
 
       # fetch records
       - name: Run fetching
         # here we can read local (which is latest remote)
         # BUT we still need to update the remote
-        run: poetry run opendata-pipeline fetch --update-remote
+        run: opendata-pipeline fetch --update-remote
         # removed `--update-remote` flag while testing
-        # run: poetry run opendata-pipeline fetch
+        # run: opendata-pipeline fetch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -125,7 +125,7 @@ jobs:
 
       - name: Run drug extraction
         # again we don't need to `--use-remote` because we checked it out
-        run: poetry run opendata-pipeline extract-drugs
+        run: opendata-pipeline extract-drugs
 
       # Upload drug data file artifact
       - uses: actions/upload-artifact@v3
@@ -172,7 +172,7 @@ jobs:
 
       - name: Run geocoding
         # again we don't need to `--use-remote` because we checked it out
-        run: poetry run opendata-pipeline geocode
+        run: opendata-pipeline geocode
         # use env here to scope to this command
         env:
           # get from github secrets
@@ -237,7 +237,7 @@ jobs:
 
       # install latest version of CLI
       - name: Run analyzer
-        run: poetry run opendata-pipeline analyze
+        run: opendata-pipeline analyze
 
       - name: Install pandas-profiling
         run: pipx install pandas-profiling
