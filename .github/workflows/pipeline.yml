@@ -245,7 +245,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: spatial-join-records
-          path: data/*_temp.csv
+          path: data/*_wide_form.csv
 
   profile:
     name: Profile
