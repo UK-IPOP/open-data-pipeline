@@ -297,7 +297,7 @@ jobs:
   release:
     name: Release Data
 
-    needs: analyze
+    needs: join
 
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
