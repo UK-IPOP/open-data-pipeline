@@ -323,10 +323,10 @@ jobs:
         with:
           # auto set by github
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "testing...."
+          automatic_release_tag: "${{ steps.date.outputs.date }}"
           prerelease: false
           # uses today's date
-          title: "Data Release: testing...."
+          title: "Data Release: ${{ steps.date.outputs.date }}"
           files: |
             README.md
             LICENSE
