@@ -21,6 +21,7 @@ from opendata_pipeline import (
     fetch as fetcher,
     analyze as analyzer,
     utils,
+    spatial_join as spatial_joiner,
 )
 
 APP_NAME = "opendata-pipeline"
@@ -138,6 +139,29 @@ def geocode(
     settings = get_settings(remote=use_remote)
     asyncio.run(geocoder.run(settings=settings, alternate_key=custom_key))
     utils.console.log("[bold green]Geocoding complete!")
+
+
+@app.command("spatial-join")
+def spatial_join(
+    use_remote: bool = typer.Option(
+        False,
+        help="Whether to use the remote configuration or not. Default is False (i.e. use local config.json)",
+    ),
+) -> None:
+    """Spatially join data sources.
+
+    This command will spatially join data sources and save it to the data directory.
+
+    If `use_remote` is True, the remote configuration will be used. Otherwise, the local configuration will be used.
+
+    Expects the data to be geocoded before running this command.
+
+    Example: opendata-pipeline spatial-join --use-remote
+    """
+    utils.console.rule("[bold cyan]Spatially joining data")
+    settings = get_settings(remote=use_remote)
+    spatial_joiner.run(settings=settings)
+    utils.console.log("[bold green]Spatial join complete!")
 
 
 @app.command("analyze")

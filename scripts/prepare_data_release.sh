@@ -18,5 +18,5 @@ for folder in data/*/; do
     tar -czf assets/$(basename $folder).tar.gz $folder
 done
 
-echo "Copying wide form csv files to assets"
-cp data/*_wide_form.csv assets/
+echo "Copying spatial join form csv files to assets"
+cp data/*_spatial_join.csv assets/

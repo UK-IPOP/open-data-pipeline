@@ -4,7 +4,7 @@
 
 mkdir -p reports
 
-for file in data/*_records.jsonl; do
+for file in data/*_spatial_join.csv; do
 
     echo "Processing $file ..."
     # take action on each file. $f store current file name

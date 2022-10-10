@@ -56,6 +56,11 @@ class GeoConfig(BaseModel):
     """List of address fields."""
     bounds: GeoBounds = Field(..., description="Bounding box for geocoding")
     """Bounding box for geocoding."""
+    spatial_join: bool = Field(
+        ...,
+        description="Should this dataset be spatially joined to the county and census tract boundaries?",
+    )
+    """Should this dataset be spatially joined to the county and census tract boundaries?"""
 
 
 class DataSource(BaseModel):
@@ -139,6 +144,11 @@ class DataSource(BaseModel):
     def csv_filename(self) -> str:
         """The filename for the wide-form CSV file."""
         return f"{self.name.replace(' ', '_').lower()}_wide_form.csv"
+
+    @property
+    def spatial_join_filename(self) -> str:
+        """The filename for the spatial join file."""
+        return f"{self.name.replace(' ', '_').lower()}_spatial_join.csv"
 
 
 class Settings(BaseSettings):
