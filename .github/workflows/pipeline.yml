@@ -185,8 +185,8 @@ jobs:
           path: data/geocoded_data.jsonl
 
   # analyze/combine the data
-  analyze:
-    name: Analyze
+  join:
+    name: Join Files
 
     # requires data to be fetched
     needs: [extract-drugs, geocode]
@@ -235,10 +235,50 @@ jobs:
           name: geocoding-output
           path: data
 
-      # install latest version of CLI
       - name: Run analyzer
         run: poetry run opendata-pipeline analyze
 
+      - name: Run geospatial joining
+        run: poetry run opendata-pipeline spatial-join
+
+      - name: Upload Spatial Join Records
+        uses: actions/upload-artifact@v3
+        with:
+          name: spatial-join-records
+          path: data/*_temp.csv
+
+  profile:
+    name: Profile
+
+    # requires data to be joined
+    needs: [join]
+
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # checkout
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Poetry
+        run: pipx install poetry
+
+      # setup python
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: "poetry"
+
+      # download records (should be in data folder)
+      - name: Download Records Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: spatial-join-records
+          path: data
+  
       - name: Install pandas-profiling
         run: pipx install --python python3.10 pandas-profiling
 
