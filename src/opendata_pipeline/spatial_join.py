@@ -1,35 +1,29 @@
 from pathlib import Path
-from typing import Any
-from opendata_pipeline import manage_config, models
-from opendata_pipeline import utils
-from opendata_pipeline.utils import console
-import orjson
 import pandas as pd
+import geopandas
+from opendata_pipeline import manage_config, models
+from opendata_pipeline.utils import console
 
 
-def read_records(config: models.DataSource) -> list[dict[str, Any]]:
+def read_records(config: models.DataSource) -> pd.DataFrame:
     """Read the records from the wide-form dataset.
 
     Args:
         config: The data source config.
 
     Returns:
-        list[dict[str, Any]]: The wide-form joined records.
+        df: The wide-form joined records.
     """
-    records: list[dict[str, Any]] = []
-    with open(config.csv_filename, "r") as f:
-        for line in f:
-            line_data = orjson.loads(line)
-            records.append(line_data)
-    return records
+    df: pd.DataFrame = pd.read_csv(Path("data") / config.csv_filename, low_memory=False)
+    return df
 
 
 def apply_composite_lat_long(
     row, config: models.GeoConfig
 ) -> tuple[str | None, str | None]:
     """Apply the composite latitude and longitude to the dataframe."""
-    lat_val = row[config.lat_field]
-    lon_val = row[config.lon_field]
+    lat_val = row[config.lat_field.lower()]
+    lon_val = row[config.lon_field.lower()]
     if lat_val and lon_val:
         return lat_val, lon_val
     # fields that may exist in the data
@@ -39,9 +33,9 @@ def apply_composite_lat_long(
         return None, None
 
 
-def configure_source_data(df: pd.DataFrame) -> pd.DataFrame:
+def configure_source_data(df: pd.DataFrame, config: models.GeoConfig) -> pd.DataFrame:
     """Configure the source data for the spatial joins."""
-    coordinates = df.apply(apply_composite_lat_long, axis=1)
+    coordinates = df.apply(lambda row: apply_composite_lat_long(row, config), axis=1)
     dff = df.copy()
     dff["composite_latitude"] = coordinates.apply(lambda x: x[0])
     dff["composite_longitude"] = coordinates.apply(lambda x: x[1])
@@ -61,10 +55,21 @@ def convert_to_geodataframe(df: pd.DataFrame) -> geopandas.GeoDataFrame:
     return geo_df
 
 
-array = [
-    "https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_17_cousub_500k.zip",  # county
-    "https://www2.census.gov/geo/tiger/TIGER2021/TRACT/tl_2021_17_tract.zip",  # census tracts
-]
+def fetch_counties_and_tracts() -> tuple[
+    geopandas.GeoDataFrame, geopandas.GeoDataFrame
+]:
+    """Fetch Counties and Census Tracts geodataframes
+
+    Order returned:
+        county, census
+    """
+    urls = [
+        "https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_17_cousub_500k.zip",  # county
+        "https://www2.census.gov/geo/tiger/TIGER2021/TRACT/tl_2021_17_tract.zip",  # census tracts
+    ]
+    dataset1: geopandas.GeoDataFrame = geopandas.read_file(urls[0]).to_crs("EPSG:4326")
+    dataset2: geopandas.GeoDataFrame = geopandas.read_file(urls[1]).to_crs("EPSG:4326")
+    return dataset1, dataset2
 
 
 def run(config: models.Settings) -> None:
@@ -72,20 +77,20 @@ def run(config: models.Settings) -> None:
     Args:
         config (models.Settings): The settings for the app.
     """
+    county_geodf, census_geodf = fetch_counties_and_tracts()
     for data_source in config.sources:
         if data_source.spatial_config is None:
             continue
         console.log(f"Spatially joining {data_source.name}")
         records = read_records(data_source)
         df = pd.DataFrame(records)
-        df = configure_source_data(df)
+        df = configure_source_data(df, data_source.spatial_config)
         geo_df = convert_to_geodataframe(df)
         console.log(
             f"Starting shape -> Rows: {geo_df.shape[0]} Columns: {geo_df.shape[1]}"
         )
-        for url in array:
-            source_gdf = geopandas.read_file(url).to_crs("EPSG:4326")
-            geo_df = geopandas.sjoin(geo_df, source_gdf, how="left", predicate="within")
+        for geo_source in [county_geodf, census_geodf]:
+            geo_df = geopandas.sjoin(geo_df, geo_source, how="left", predicate="within")
             geo_df.drop(columns=["index_right"], inplace=True, errors="ignore")
             console.log(
                 f"Updated shape -> Rows: {geo_df.shape[0]} Columns: {geo_df.shape[1]}"
@@ -97,5 +102,5 @@ def run(config: models.Settings) -> None:
 
 
 if __name__ == "__main__":
-    config = manage_config.get_local_config()
-    run(config)
+    settings = manage_config.get_local_config()
+    run(config=settings)
