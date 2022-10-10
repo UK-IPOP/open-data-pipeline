@@ -19,4 +19,4 @@ for folder in data/*/; do
 done
 
 echo "Copying spatial join form csv files to assets"
-cp data/*_spatial_join.csv assets/
+cp data/*_wide_form.csv assets/

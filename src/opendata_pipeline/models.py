@@ -141,14 +141,14 @@ class DataSource(BaseModel):
         return f"{self.name.replace(' ', '_').lower()}_drug_prep.csv"
 
     @property
-    def csv_filename(self) -> str:
+    def temp_wide_filename(self) -> str:
         """The filename for the wide-form CSV file."""
-        return f"{self.name.replace(' ', '_').lower()}_wide_form.csv"
+        return f"{self.name.replace(' ', '_').lower()}_temp.csv"
 
     @property
-    def spatial_join_filename(self) -> str:
+    def wide_form_filename(self) -> str:
         """The filename for the spatial join file."""
-        return f"{self.name.replace(' ', '_').lower()}_spatial_join.csv"
+        return f"{self.name.replace(' ', '_').lower()}_wide_form.csv"
 
 
 class Settings(BaseSettings):

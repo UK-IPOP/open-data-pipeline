@@ -160,7 +160,7 @@ def spatial_join(
     """
     utils.console.rule("[bold cyan]Spatially joining data")
     settings = get_settings(remote=use_remote)
-    spatial_joiner.run(settings=settings)
+    spatial_joiner.run(config=settings)
     utils.console.log("[bold green]Spatial join complete!")
 
 

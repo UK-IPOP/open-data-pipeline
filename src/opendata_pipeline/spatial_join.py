@@ -14,7 +14,9 @@ def read_records(config: models.DataSource) -> pd.DataFrame:
     Returns:
         df: The wide-form joined records.
     """
-    df: pd.DataFrame = pd.read_csv(Path("data") / config.csv_filename, low_memory=False)
+    df: pd.DataFrame = pd.read_csv(
+        Path("data") / config.temp_wide_filename, low_memory=False
+    )
     return df
 
 
@@ -80,6 +82,11 @@ def run(config: models.Settings) -> None:
     county_geodf, census_geodf = fetch_counties_and_tracts()
     for data_source in config.sources:
         if data_source.spatial_config is None:
+            console.log(f"{data_source.name} needs no spatial joining")
+            console.log("Writing to file...")
+            pd.read_csv(
+                Path("data") / data_source.temp_wide_filename, low_memory=False
+            ).to_csv(Path("data") / data_source.wide_form_filename)
             continue
         console.log(f"Spatially joining {data_source.name}")
         records = read_records(data_source)
@@ -97,7 +104,7 @@ def run(config: models.Settings) -> None:
             )
 
         console.log("Writing to file...")
-        geo_df.to_csv(Path("data") / data_source.spatial_join_filename, index=False)
+        geo_df.to_csv(Path("data") / data_source.wide_form_filename, index=False)
         console.log("Done!")
 
 

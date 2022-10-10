@@ -233,7 +233,7 @@ def run(settings: models.Settings) -> None:
 
         console.log("Writing combined data to csv...")
         cleaned_df.reset_index().to_csv(
-            Path("data") / data_source.csv_filename, index=False
+            Path("data") / data_source.temp_wide_filename, index=False
         )
 
 
