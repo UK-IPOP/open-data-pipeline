@@ -28,7 +28,8 @@
                     "spatial_reference": {
                         "wkid": 4326
                     }
-                }
+                },
+                "spatial_join": true
             }
         },
         {
@@ -74,7 +75,8 @@
                     "spatial_reference": {
                         "wkid": 4326
                     }
-                }
+                },
+                "spatial_join": true
             }
         }
     ]
