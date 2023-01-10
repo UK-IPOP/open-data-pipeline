@@ -40,7 +40,7 @@ def update_local_config(config: models.Settings):
     console.log("Updating local config.json file")
     data = config.dict(exclude={"arcgis_api_key", "github_token"})
     with open(Path("config.json"), "w") as f:
-        json.dump(data, f, indent=4)
+        json.dump(data, f, indent=2, sort_keys=True)
 
 
 def update_remote_config(config: models.Settings):
@@ -63,7 +63,10 @@ def update_remote_config(config: models.Settings):
     data["sha"] = file_sha
 
     # encode the file contents
-    encoded = orjson.dumps(config.dict(exclude={"arcgis_api_key", "github_token"}))
+    encoded = orjson.dumps(
+        config.dict(exclude={"arcgis_api_key", "github_token"}),
+        option=orjson.OPT_INDENT_2 | orjson.OPT_SORT_KEYS,
+    )
     data["content"] = base64.b64encode(encoded).decode("utf-8")
 
     console.log("Updating remote config.json file")
