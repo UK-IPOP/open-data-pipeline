@@ -36,7 +36,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
           cache: "poetry"
 
       # install latest version of CLI
@@ -92,7 +92,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
           cache: "poetry"
 
       # install latest version of CLI
@@ -156,7 +156,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
           cache: "poetry"
 
       # install latest version of CLI
@@ -207,7 +207,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
           cache: "poetry"
 
       # install latest version of CLI
@@ -269,7 +269,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
           cache: "poetry"
 
       # download records (should be in data folder)
@@ -280,7 +280,7 @@ jobs:
           path: data
   
       - name: Install pandas-profiling
-        run: pipx install --python python3.10 pandas-profiling
+        run: pipx install --python python3.11 pandas-profiling
 
       - name: Run profiling
         run: ./scripts/profile.sh
