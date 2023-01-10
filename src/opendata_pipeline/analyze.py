@@ -205,8 +205,11 @@ def combine(
     records_wide_drugs = merge_wide_drugs_to_records(
         base_df=base_df, wide_drug_df=wide_drug_df
     )
-    joined_df = join_geocoded_data(base_df=records_wide_drugs, geo_df=geo_df)
-    return joined_df
+    if geo_df.empty:
+        return records_wide_drugs
+    else:
+        joined_df = join_geocoded_data(base_df=records_wide_drugs, geo_df=geo_df)
+        return joined_df
 
 
 def cleanup_columns(df: pd.DataFrame):
@@ -240,7 +243,10 @@ def run(settings: models.Settings) -> None:
         console.log(f"Read {len(drug_df)} drug records for {data_source.name}")
 
         geocoded_df = read_geocoded_data(source=data_source)
-        console.log(f"Read {len(geocoded_df)} geocoded records for {data_source.name}")
+        if not geocoded_df.empty:
+            console.log(
+                f"Read {len(geocoded_df)} geocoded records for {data_source.name}"
+            )
 
         # write a file for each analysis step for the data source
         # written into a folder for the data source so that we can zip
@@ -248,7 +254,8 @@ def run(settings: models.Settings) -> None:
         data_dir.mkdir(exist_ok=True)
         records_df.reset_index().to_csv(data_dir / "records.csv")
         drug_df.reset_index().to_csv(data_dir / "drug.csv")
-        geocoded_df.reset_index().to_csv(data_dir / "geocoded.csv")
+        if not geocoded_df.empty:
+            geocoded_df.reset_index().to_csv(data_dir / "geocoded.csv")
         # eventually add spatial
 
         console.log("Combining data...")
