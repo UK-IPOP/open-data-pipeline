@@ -66,6 +66,8 @@ def fetch_counties_and_tracts() -> tuple[
         county, census
     """
     urls = [
+        # TODO update counties to 2021 shapefile
+        #  https://www2.census.gov/geo/tiger/GENZ2021/shp/
         "https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_17_cousub_500k.zip",  # county
         "https://www2.census.gov/geo/tiger/TIGER2021/TRACT/tl_2021_17_tract.zip",  # census tracts
     ]
