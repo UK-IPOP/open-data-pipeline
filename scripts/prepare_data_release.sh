@@ -16,3 +16,6 @@ done
 
 echo "Copying spatial join form csv files to assets"
 cp data/*_wide_form.csv assets/
+
+echo "Copying extracted drug output csv file to assets"
+cp data/drug_output.csv assets/
