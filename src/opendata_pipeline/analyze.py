@@ -104,6 +104,32 @@ def read_records(source: models.DataSource) -> pd.DataFrame:
     return df
 
 
+def add_death_date_breakdowns(df: pd.DataFrame) -> pd.DataFrame:
+    """Adds death date breakdowns to the data IN PLACE.
+
+    Args:
+        df (pd.DataFrame): The records dataframe.
+
+    Returns:
+        pd.DataFrame: The records dataframe with death date breakdowns added.
+    """
+    # handles MIL being different column name
+    death_date_col = "death_date" if "death_date" in df.columns else "DeathDate"
+    # convert to datetime
+    df[death_date_col] = pd.to_datetime(df[death_date_col])
+
+    # now add breakdowns with appropriate names
+    df["death_day"] = df[death_date_col].dt.day
+    df["death_month"] = df[death_date_col].dt.month_name()
+    df["death_month_num"] = df[death_date_col].dt.month
+    df["death_year"] = df[death_date_col].dt.year
+    df["death_day_of_week"] = df[death_date_col].dt.day_name()
+    df["death_day_is_weekend"] = df[death_date_col].dt.day_of_week > 4
+    df["death_day_week_of_year"] = df[death_date_col].dt.isocalendar().week
+
+    return df
+
+
 def make_wide(df: pd.DataFrame) -> pd.DataFrame:
     """Converts the drug data from long to wide format.
 
@@ -206,6 +232,10 @@ def run(settings: models.Settings) -> None:
         console.log(
             f"Read {len(records_df)} records from {data_source.records_filename}"
         )
+
+        add_death_date_breakdowns(df=records_df)
+        console.log("Added death date breakdowns to records")
+
         drug_df = read_drug_data(source=data_source)
         console.log(f"Read {len(drug_df)} drug records for {data_source.name}")
 
