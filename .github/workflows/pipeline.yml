@@ -241,11 +241,11 @@ jobs:
       - name: Run geospatial joining
         run: poetry run opendata-pipeline spatial-join
 
-      - name: Upload Spatial Join Records
+      - name: Upload All Data
         uses: actions/upload-artifact@v3
         with:
-          name: spatial-join-records
-          path: data/*_wide_form.csv
+          name: all-data
+          path: data
 
   profile:
     name: Profile
@@ -276,8 +276,7 @@ jobs:
       - name: Download Records Artifact
         uses: actions/download-artifact@v3
         with:
-          name: spatial-join-records
-          path: data
+          name: data
 
       # download drug files (should be in data folder)
       - name: Download Records Artifact
