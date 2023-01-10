@@ -1,1 +1,83 @@
-{"sources":[{"name":"Cook County","url":"https://datacatalog.cookcountyil.gov/api/odata/v4/cjeq-bs86","total_records":100,"needs_pagination":false,"is_open_data":true,"drug_columns":["primary_cod","secondarycause"],"needs_geocoding":true,"spatial_config":{"lat_field":"latitude","lon_field":"longitude","address_fields":{"street":"incident_street","city":"incident_city","state":null,"zip":"incident_zip"},"bounds":{"xmin":-88.3,"xmax":-87.5,"ymin":41.4,"ymax":42.2,"spatial_reference":{"wkid":4326}},"spatial_join":true}},{"name":"San Diego County","url":"https://data.sandiegocounty.gov/api/odata/v4/jkvb-n4p7","total_records":100,"needs_pagination":false,"is_open_data":true,"drug_columns":["cod_string","contributing_conditions","how_injury_occurred"],"needs_geocoding":false,"spatial_config":null},{"name":"Milwaukee County","url":"https://lio.milwaukeecountywi.gov/arcgis/rest/services/MedicalExaminer/PublicDataAccess/MapServer/1/query?f=json&where=1%3D1&outFields=*&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outSR=102100","total_records":100,"needs_pagination":true,"is_open_data":false,"drug_columns":["CauseA","CauseB","CauseOther"],"needs_geocoding":true,"spatial_config":{"lat_field":"YCoordinate","lon_field":"XCoordinate","address_fields":{"street":"EventAddr","city":"EventCity","state":"EventState","zip":"EventZip"},"bounds":{"xmin":-88.1,"xmax":-87.8,"ymin":42.8,"ymax":43.2,"spatial_reference":{"wkid":4326}},"spatial_join":true}}]}
+{
+  "sources": [
+    {
+      "drug_columns": [
+        "primary_cod",
+        "secondarycause"
+      ],
+      "is_open_data": true,
+      "name": "Cook County",
+      "needs_geocoding": true,
+      "needs_pagination": false,
+      "spatial_config": {
+        "address_fields": {
+          "city": "incident_city",
+          "state": null,
+          "street": "incident_street",
+          "zip": "incident_zip"
+        },
+        "bounds": {
+          "spatial_reference": {
+            "wkid": 4326
+          },
+          "xmax": -87.5,
+          "xmin": -88.3,
+          "ymax": 42.2,
+          "ymin": 41.4
+        },
+        "lat_field": "latitude",
+        "lon_field": "longitude",
+        "spatial_join": true
+      },
+      "total_records": 1100,
+      "url": "https://datacatalog.cookcountyil.gov/api/odata/v4/cjeq-bs86"
+    },
+    {
+      "drug_columns": [
+        "cod_string",
+        "contributing_conditions",
+        "how_injury_occurred"
+      ],
+      "is_open_data": true,
+      "name": "San Diego County",
+      "needs_geocoding": false,
+      "needs_pagination": false,
+      "spatial_config": null,
+      "total_records": 1100,
+      "url": "https://data.sandiegocounty.gov/api/odata/v4/jkvb-n4p7"
+    },
+    {
+      "drug_columns": [
+        "CauseA",
+        "CauseB",
+        "CauseOther"
+      ],
+      "is_open_data": false,
+      "name": "Milwaukee County",
+      "needs_geocoding": true,
+      "needs_pagination": true,
+      "spatial_config": {
+        "address_fields": {
+          "city": "EventCity",
+          "state": "EventState",
+          "street": "EventAddr",
+          "zip": "EventZip"
+        },
+        "bounds": {
+          "spatial_reference": {
+            "wkid": 4326
+          },
+          "xmax": -87.8,
+          "xmin": -88.1,
+          "ymax": 43.2,
+          "ymin": 42.8
+        },
+        "lat_field": "YCoordinate",
+        "lon_field": "XCoordinate",
+        "spatial_join": true
+      },
+      "total_records": 3000,
+      "url": "https://lio.milwaukeecountywi.gov/arcgis/rest/services/MedicalExaminer/PublicDataAccess/MapServer/1/query?f=json&where=1%3D1&outFields=*&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outSR=102100"
+    }
+  ]
+}
