@@ -11,6 +11,7 @@ from typing import Any, Generator
 import orjson
 import requests
 import subprocess
+import pandas as pd
 
 from opendata_pipeline import manage_config, models
 from opendata_pipeline.utils import console
@@ -136,6 +137,13 @@ def export_drug_output(drug_results: list[dict[str, Any]]) -> None:
     with open(Path("data") / "drug_data.jsonl", "w") as f:
         for record in drug_results:
             f.write(orjson.dumps(record).decode("utf-8") + "\n")
+
+    (
+        pd.DataFrame(drug_results)
+        .rename(columns={"record_id": "CaseIdentifier"})
+        .drop(columns=["source_col_index"])
+        .to_csv(Path("data") / "drug_output.csv", index=False)
+    )
 
 
 def run(settings: models.Settings) -> None:
