@@ -131,7 +131,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: drug-output
-          path: data/drug_data.jsonl
+          path: data/drug_*
 
   # geocode the data
   geocode:
@@ -278,6 +278,13 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: spatial-join-records
+          path: data
+
+      # download drug files (should be in data folder)
+      - name: Download Records Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: drug-output
           path: data
   
       - name: Install pandas-profiling
