@@ -214,3 +214,5 @@ reports
 *.ipynb
 
 *.tar.gz
+
+assets
