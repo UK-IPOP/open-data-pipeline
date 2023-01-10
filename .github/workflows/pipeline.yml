@@ -271,7 +271,6 @@ jobs:
         with:
           # TODO: have to use 3.10 until pandas-profiling supports 3.11
           python-version: "3.10"
-          cache: "poetry"
 
       # download records (should be in data folder)
       - name: Download Records Artifact
