@@ -276,7 +276,7 @@ jobs:
       - name: Download Records Artifact
         uses: actions/download-artifact@v3
         with:
-          name: data
+          name: all-data
 
       # download drug files (should be in data folder)
       - name: Download Records Artifact
