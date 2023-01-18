@@ -53,11 +53,31 @@ The workflow can best be described by looking at the `pipeline.yml` file.
 
 The following table shows the fields that we **add** to the original datafiles:
 
-| Name | Column Name | Description |
-| :---         |     :---     |   :--- |
-| git status   | git status     | git status    |
-| git diff     | git diff       | git diff      |
+| Column Name  | Description     |
+| :------ | :------ |
+| `CaseIdentifier` | A *unique* identifier *across all* the datasets. |
+| `death_day` | Day of the Month death occurred  |
+| `death_month`            | Month Name death occurred  |
+| `death_month_num`        | Month Number death occurred  |
+| `death_year`             | Year death occurred  |
+| `death_day_of_week`      | Day of week death occurred. Starting with 0 on Monday.  Weekends are 5 (Saturday) & 6 (Sunday). |
+| `death_day_is_weekend`   | Death occurred on weekend day  |
+| `death_day_week_of_year` | Week of the year (of 52) that death occurred |
+| `geocoded_latitude` | Geocoded latitude. |
+| `geocoded_longitude` | Geocoded longitude. |
+| `geocoded_score` | Confidence of geocoding. 70-100. |
+| `geocoded_address`| The address that the geocoded results correspond to. Not the address provided to the geocoder. |
 
+
+### Drug Columns
+
+In addition to providing the extracted drugs as a separate file in each release, we also convert this data to wide-form for each dataset. This adds the following columns in the subsequent pattern:
+
+| Column Name/Pattern | Description |
+| :--- | :--- |
+| `*_1` | `*` drug found in first search column provided in drug configuration |
+| `*_2` | `*` drug found in second search column provided in drug configuration |
+| `*_tag` | Drug of `*` category/class found in this record.
 
 ## Requirements
 
