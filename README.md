@@ -47,7 +47,17 @@ I would recommend using the docker image as it is easier to use and always refer
 
 The workflow can best be described by looking at the `pipeline.yml` file.
 
-![Workflow](./imgs/workflow.png)
+<img width="1104" alt="CleanShot 2023-01-18 at 10 38 29@2x" src="https://user-images.githubusercontent.com/45318637/213240766-b9b26d7d-0a5a-409b-b363-be487b55a57f.png">
+
+## Data Enhancements
+
+The following table shows the fields that we **add** to the original datafiles:
+
+| Name | Column Name | Description |
+| :---         |     :---     |   :--- |
+| git status   | git status     | git status    |
+| git diff     | git diff       | git diff      |
+
 
 ## Requirements
 
