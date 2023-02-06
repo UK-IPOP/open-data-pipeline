@@ -29,7 +29,7 @@
         "lon_field": "longitude",
         "spatial_join": true
       },
-      "total_records": 72499,
+      "total_records": 72643,
       "url": "https://datacatalog.cookcountyil.gov/api/odata/v4/cjeq-bs86"
     },
     {
@@ -76,7 +76,7 @@
         "lon_field": "XCoordinate",
         "spatial_join": true
       },
-      "total_records": 64004,
+      "total_records": 64065,
       "url": "https://lio.milwaukeecountywi.gov/arcgis/rest/services/MedicalExaminer/PublicDataAccess/MapServer/1/query?f=json&where=1%3D1&outFields=*&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outSR=102100"
     }
   ]
