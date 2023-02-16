@@ -121,7 +121,7 @@ jobs:
 
       - name: Install Drug Extraction Toolbox
         # use || true if already installed (in cache)
-        run: cargo install drug-extraction-cli || true
+        run: cargo install --bin drug-extraction-cli --version 0.1.3 || true
 
       - name: Run drug extraction
         # again we don't need to `--use-remote` because we checked it out
