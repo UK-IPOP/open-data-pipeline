@@ -106,23 +106,12 @@ jobs:
           name: drug-files
           path: data
       # install rust CLI program
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-
-      - name: Setup cache
-        id: cache-cargo
-        uses: actions/cache@v3
-        with:
-          path: ~/.cargo/bin
-          key: ${{ runner.os }}-cargobin
-
-      - name: Install Drug Extraction Toolbox
-        # use || true if already installed (in cache)
-        run: cargo install drug-extraction-cli --version 0.1.3 || true
-
+      - name: Install Cargo
+        run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+      - name: Set cargo to path
+        run: source "$HOME/.cargo/env"
+      - name: Install extract-drugs
+        run: pipx install extract-drugs
       - name: Run drug extraction
         # again we don't need to `--use-remote` because we checked it out
         run: poetry run opendata-pipeline extract-drugs

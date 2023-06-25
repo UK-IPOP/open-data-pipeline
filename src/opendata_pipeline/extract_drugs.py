@@ -5,6 +5,7 @@ It utilizes the drug columns (in order) listed in the config file (config.json).
 It also requires you to have the [drug extraction tool](https://github.com/UK-IPOP/drug-extraction) installed.
 """
 from __future__ import annotations
+import csv
 from pathlib import Path
 
 from typing import Any, Generator
@@ -17,88 +18,59 @@ from opendata_pipeline import manage_config, models
 from opendata_pipeline.utils import console
 
 
-def fetch_drug_search_terms() -> dict[str, str]:
+def fetch_drug_search_terms() -> None:
     """Fetch drug search terms from the remote github repo.
 
     Returns:
         dict[str, str]: a dictionary of search terms and their tags
     """
     console.log("Fetching drug search terms from GitHub")
-    url = "https://raw.githubusercontent.com/UK-IPOP/drug-extraction/main/de-workflow/data/drug_info.json"
+    url = "https://raw.githubusercontent.com/UK-IPOP/drug-extraction/main/data/search_terms.csv"
     resp = requests.get(url)
     data = resp.json()
-    return {k: "|".join(v) for k, v in data.items()}
+    Path("search_terms.csv").write_text(resp.text)
 
 
-def command(input_fpath: str, target_column: str, search_words: str) -> list[str]:
+def command(input_fpath: str, target_column: str) -> list[str]:
     """Build the command to run the drug extraction tool.
 
     Args:
         input_fpath (str): path to the input file
         target_column (str): the column to search
-        search_words (str): the search terms
 
     Returns:
         list[str]: the command (list) to run
     """
     return [
         "extract-drugs",
-        "simple-search",
+        "search",
+        "--data-file",
         input_fpath,
-        "--target-column",
+        "--search-cols",
         target_column,
-        "--id-column",
+        "--id-col",
         # we made this column when we fetched the data
         "CaseIdentifier",
-        "--search-words",
-        search_words,
-        "--algorithm",
-        "osa",
-        "--threshold",
-        "0.9",
-        "--format",
-        "jsonl",
     ]
 
 
-def read_drug_output() -> Generator[dict[str, Any], None, None]:
+def read_drug_output() -> Generator[dict[str, str], None, None]:
     """Read the drug output file and yield each record."""
-    with open("extracted_drugs.jsonl", "r") as f:
-        for line in f:
-            yield orjson.loads(line)
+    with open(Path().cwd() / "output.csv", "r") as f:
+        reader = csv.DictReader(f)
+        for line in reader:
+            yield line
 
 
-def enhance_drug_output(
-    record: dict,
-    target_column: str,
-    column_level: int,
-    data_source: str,
-    tag_lookup: dict[str, str],
-) -> Generator[dict[str, Any], None, None]:
-    """Enhance drug output with additional columns."""
-    record["data_source"] = data_source
-    record["source_column"] = target_column
-    record["source_col_index"] = column_level
-    record["tags"] = tag_lookup[record["search_term"].lower()]
-    yield record
-
-
-def run_drug_tool(
-    config: models.DataSource, tag_lookup: dict[str, str]
-) -> list[dict[str, Any]]:
+def run_drug_tool(config: models.DataSource) -> list[dict[str, Any]]:
     """Run the drug extraction tool.
 
     Args:
         config (models.DataSource): the data source config
-        tag_lookup (dict[str, str]): the drug search terms
 
     Returns:
         list[dict[str, Any]]: the drug results
     """
-    # mostly this is replicating de-workflow code but we don't want ALL of those features
-    # and the added dependencies so we just rewrite it here
-    terms = "|".join(tag_lookup.keys())
-
     drug_results: list[dict[str, Any]] = []
 
     for column_level, target_column in enumerate(config.drug_columns):
@@ -107,7 +79,6 @@ def run_drug_tool(
         cmd = command(
             input_fpath=in_file.as_posix(),
             target_column=target_column,
-            search_words=terms,
         )
         # output is written to file
 
@@ -118,16 +89,7 @@ def run_drug_tool(
         # so now we read the file using generators
         # could code this better
         for record in read_drug_output():
-            enhanced_records = enhance_drug_output(
-                record=record,
-                data_source=config.name,
-                target_column=target_column,
-                column_level=column_level,
-                tag_lookup=tag_lookup,
-            )
-            # consume generator
-            for enhanced_record in enhanced_records:
-                drug_results.append(enhanced_record)
+            drug_results.append(record)
 
     return drug_results
 
@@ -140,7 +102,7 @@ def export_drug_output(drug_results: list[dict[str, Any]]) -> None:
 
     (
         pd.DataFrame(drug_results)
-        .rename(columns={"record_id": "CaseIdentifier"})
+        .rename(columns={"row_id": "CaseIdentifier"})
         .drop(columns=["source_col_index"])
         .to_csv(Path("data") / "drug_output.csv", index=False)
     )
@@ -152,7 +114,7 @@ def run(settings: models.Settings) -> None:
 
     drug_results: list[dict[str, Any]] = []
     for data_source in settings.sources:
-        results = run_drug_tool(config=data_source, tag_lookup=search_terms)
+        results = run_drug_tool(config=data_source)
         drug_results.extend(results)
 
     console.log("Exporting drug data...")

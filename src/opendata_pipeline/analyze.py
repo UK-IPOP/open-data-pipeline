@@ -6,6 +6,8 @@ converting into wide format for analysis.
 You can actually run this as a script directly from the command line if you cloned the repo.
 """
 
+from collections import defaultdict
+from dataclasses import dataclass
 from pathlib import Path
 import pandas as pd
 
@@ -130,6 +132,17 @@ def add_death_date_breakdowns(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+@dataclass
+class SearchOutput:
+    row_id: str
+    search_term: str
+    matched_term: str
+    edits: int
+    similarity_score: float
+    search_field: str
+    metadata: str | None
+
+
 def make_wide(df: pd.DataFrame) -> pd.DataFrame:
     """Converts the drug data from long to wide format.
 
@@ -142,19 +155,19 @@ def make_wide(df: pd.DataFrame) -> pd.DataFrame:
     # expects drug_df to have CaseIdentifier as index
     records: dict[str, dict[str, int]] = {}
     for row in df.reset_index().to_dict(orient="records"):
-        case_id = row["CaseIdentifier"]
-        if case_id not in records.keys():
-            records[case_id] = {}
-
-        # this encode the source column index (primary = 1, secondary = 2, etc)
-        # and combines it with the search term (drug name)
-        column_name = f"{row['search_term'].lower()}_{row['source_col_index'] + 1}"
-        # set to 1 because we found it
-        records[case_id][column_name] = 1
-
-        for tag in row["tags"].split("|"):
-            # set to 1 because we found it
-            records[case_id][f"{tag}_tag"] = 1
+        record = SearchOutput(**row)  # type: ignore
+        # binary flag for each search term
+        if record.row_id not in records:
+            records[record.row_id] = defaultdict(int)
+        records[record.row_id][record.search_term] = 1
+        # binary flag for search field
+        # need to rename so doesn't overwrite on joining to source data
+        records[record.row_id][f"{record.search_field.replace(' ', '_')}_matched"] = 1
+        # metadata binary flags, assumes metadata is pipe delimited
+        # uses "group" to avoid potential column name conflicts
+        if record.metadata:
+            for meta in record.metadata.split("|"):
+                records[record.row_id][f"{meta.upper()}_meta"] = 1
 
     flat_records = [{"CaseIdentifier": k, **v} for k, v in records.items()]
     wide_df = pd.DataFrame(flat_records).set_index("CaseIdentifier")
@@ -230,7 +243,6 @@ def run(settings: models.Settings) -> None:
         settings (models.Settings): The settings.
     """
     for data_source in settings.sources:
-
         records_df = read_records(source=data_source)
         console.log(
             f"Read {len(records_df)} records from {data_source.records_filename}"
