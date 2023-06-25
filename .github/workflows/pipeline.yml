@@ -106,10 +106,9 @@ jobs:
           name: drug-files
           path: data
       # install rust CLI program
-      - name: Install Cargo
-        run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-      - name: Set cargo to path
-        run: source "$HOME/.cargo/env"
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
       - name: Install extract-drugs
         run: pipx install extract-drugs
       - name: Run drug extraction
