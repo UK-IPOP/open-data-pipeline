@@ -254,7 +254,7 @@ def run(settings: models.Settings) -> None:
         # a little hard coding needed
         if data_source.name == "Milwaukee County":
             # overwrite column with cleaned up version
-            records_df["eventdate"] = records_df["eventdate"].apply(handle_mil_eventdate)
+            records_df["EventDate"] = records_df["EventDate"].apply(handle_mil_eventdate)
         console.log("Added death date breakdowns to records")
 
         drug_df = read_drug_data(source=data_source)
