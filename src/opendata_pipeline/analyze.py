@@ -225,6 +225,19 @@ def cleanup_columns(df: pd.DataFrame):
     return df.rename(columns={col: col.lower().replace(" ", "_") for col in df.columns})
 
 
+def handle_mil_eventdate(x: str):
+    if pd.isna(x):
+        return None
+    else:
+        try:
+            return pd.to_datetime(x).strftime('%Y-%m-%d')
+        except:
+            try:
+                return pd.to_datetime(x.split(' ')[0].strip()).strftime('%Y-%m-%d')
+            except:
+                return None
+    
+
 def run(settings: models.Settings) -> None:
     """Runs the data processing.
 
@@ -238,6 +251,10 @@ def run(settings: models.Settings) -> None:
         )
 
         add_death_date_breakdowns(df=records_df)
+        # a little hard coding needed
+        if data_source.name == "Milwaukee County":
+            # overwrite column with cleaned up version
+            records_df["eventdate"] = records_df["eventdate"].apply(handle_mil_eventdate)
         console.log("Added death date breakdowns to records")
 
         drug_df = read_drug_data(source=data_source)
