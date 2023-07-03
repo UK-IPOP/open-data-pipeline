@@ -132,17 +132,6 @@ def add_death_date_breakdowns(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-@dataclass
-class SearchOutput:
-    row_id: str
-    search_term: str
-    matched_term: str
-    edits: int
-    similarity_score: float
-    search_field: str
-    metadata: str | None
-
-
 def make_wide(df: pd.DataFrame) -> pd.DataFrame:
     """Converts the drug data from long to wide format.
 
