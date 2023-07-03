@@ -26,10 +26,11 @@ def apply_composite_lat_long(
     """Apply the composite latitude and longitude to the dataframe."""
     lat_val = row[config.lat_field.lower()]
     lon_val = row[config.lon_field.lower()]
-    if lat_val and lon_val:
+    # TODO: switch to using pd.notna and pd.isna
+    if pd.notna(lat_val) and pd.notna(lon_val):
         return lat_val, lon_val
     # fields that may exist in the data
-    elif row["geocoded_latitude"] and row["geocoded_longitude"]:
+    elif pd.notna(row["geocoded_latitude"]) and pd.notna(row["geocoded_longitude"]):
         return row["geocoded_latitude"], row["geocoded_longitude"]
     else:
         return None, None
