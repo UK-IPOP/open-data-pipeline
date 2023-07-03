@@ -15,6 +15,7 @@ from opendata_pipeline import manage_config, models
 from opendata_pipeline.utils import console
 
 
+
 def read_geocoded_data(source: models.DataSource) -> pd.DataFrame:
     """Reads the geocoded data from the data directory.
 
@@ -63,7 +64,7 @@ def read_drug_data(source: models.DataSource) -> pd.DataFrame:
             orient="records",
             typ="frame",
         )
-        .rename(columns={"record_id": "CaseIdentifier"})
+        .rename(columns={"row_id": "CaseIdentifier"})
         .set_index("CaseIdentifier")
     )
     # column we set to data source name --> `data_source`
@@ -144,19 +145,18 @@ def make_wide(df: pd.DataFrame) -> pd.DataFrame:
     # expects drug_df to have CaseIdentifier as index
     records: dict[str, dict[str, int]] = {}
     for row in df.reset_index().to_dict(orient="records"):
-        record = SearchOutput(**row)  # type: ignore
         # binary flag for each search term
-        if record.row_id not in records:
-            records[record.row_id] = defaultdict(int)
-        records[record.row_id][record.search_term] = 1
+        if row['CaseIdentifier'] not in records:
+            records[row['CaseIdentifier']] = defaultdict(int)
+        records[row['CaseIdentifier']][row['search_term']] = 1
         # binary flag for search field
         # need to rename so doesn't overwrite on joining to source data
-        records[record.row_id][f"{record.search_field.replace(' ', '_')}_matched"] = 1
+        records[row['CaseIdentifier']][f"{row['search_field'].replace(' ', '_')}_matched"] = 1
         # metadata binary flags, assumes metadata is pipe delimited
         # uses "group" to avoid potential column name conflicts
-        if record.metadata:
-            for meta in record.metadata.split("|"):
-                records[record.row_id][f"{meta.upper()}_meta"] = 1
+        if row['metadata']:
+            for meta in row['metadata'].split("|"):
+                records[row['CaseIdentifier']][f"{meta.upper()}_meta"] = 1
 
     flat_records = [{"CaseIdentifier": k, **v} for k, v in records.items()]
     wide_df = pd.DataFrame(flat_records).set_index("CaseIdentifier")

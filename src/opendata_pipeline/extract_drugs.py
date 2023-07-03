@@ -27,11 +27,11 @@ def fetch_drug_search_terms() -> None:
     console.log("Fetching drug search terms from GitHub")
     url = "https://raw.githubusercontent.com/UK-IPOP/drug-extraction/main/data/search_terms.csv"
     resp = requests.get(url)
-    data = resp.json()
+    # data = resp.json()
     Path("search_terms.csv").write_text(resp.text)
 
 
-def command(input_fpath: str, target_column: str) -> list[str]:
+def command(input_fpath: str, target_columns: list[str] | str) -> list[str]:
     """Build the command to run the drug extraction tool.
 
     Args:
@@ -41,24 +41,29 @@ def command(input_fpath: str, target_column: str) -> list[str]:
     Returns:
         list[str]: the command (list) to run
     """
-    return [
+    cmd = [
         "extract-drugs",
         "search",
         "--data-file",
         input_fpath,
-        "--search-cols",
-        target_column,
         "--id-col",
         # we made this column when we fetched the data
         "CaseIdentifier",
     ]
+    if isinstance(target_columns, str):
+        cmd.extend(["--search-cols", target_columns])
+    else:
+        for col in target_columns:
+            cmd.extend(["--search-cols", col])
+    return cmd
 
 
-def read_drug_output() -> Generator[dict[str, str], None, None]:
+def read_drug_output(source: str) -> Generator[dict[str, str], None, None]:
     """Read the drug output file and yield each record."""
     with open(Path().cwd() / "output.csv", "r") as f:
         reader = csv.DictReader(f)
         for line in reader:
+            line["data_source"] = source
             yield line
 
 
@@ -73,23 +78,20 @@ def run_drug_tool(config: models.DataSource) -> list[dict[str, Any]]:
     """
     drug_results: list[dict[str, Any]] = []
 
-    for column_level, target_column in enumerate(config.drug_columns):
-        # TODO: adjust this when we can read jsonlines in drug tool
-        in_file = Path("data") / config.drug_prep_filename
-        cmd = command(
-            input_fpath=in_file.as_posix(),
-            target_column=target_column,
-        )
-        # output is written to file
-
-        console.log(
-            f"Running drug extraction tool on {target_column} for {config.name}"
-        )
-        subprocess.run(cmd)
-        # so now we read the file using generators
-        # could code this better
-        for record in read_drug_output():
-            drug_results.append(record)
+    in_file = Path("data") / config.drug_prep_filename
+    cmd = command(
+        input_fpath=in_file.as_posix(),
+        target_columns=config.drug_columns,
+    )
+    console.log(
+        f"Running drug extraction tool on {config.drug_columns} for {config.name}"
+    )
+    # output is written to file
+    subprocess.run(cmd)
+    # so now we read the file using generators
+    # could code this better
+    for record in read_drug_output(config.name):
+        drug_results.append(record)
 
     return drug_results
 
@@ -103,14 +105,13 @@ def export_drug_output(drug_results: list[dict[str, Any]]) -> None:
     (
         pd.DataFrame(drug_results)
         .rename(columns={"row_id": "CaseIdentifier"})
-        .drop(columns=["source_col_index"])
         .to_csv(Path("data") / "drug_output.csv", index=False)
     )
 
 
 def run(settings: models.Settings) -> None:
     """Run the drug extraction tool."""
-    search_terms = fetch_drug_search_terms()
+    fetch_drug_search_terms()
 
     drug_results: list[dict[str, Any]] = []
     for data_source in settings.sources:
