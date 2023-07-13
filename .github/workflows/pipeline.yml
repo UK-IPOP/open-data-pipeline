@@ -273,7 +273,7 @@ jobs:
         with:
           name: drug-output
           path: data
-  
+
       - name: Install pandas-profiling
         # TODO: specify 3.10 until 3.11 supported
         run: pipx install --python python3.10 pandas-profiling
@@ -322,7 +322,7 @@ jobs:
           automatic_release_tag: "${{ steps.date.outputs.date }}"
           prerelease: false
           # uses today's date
-          title: "Data Release: ${{ steps.date.outputs.date }}"
+          title: ${{ steps.date.outputs.date }}
           files: |
             README.md
             LICENSE
