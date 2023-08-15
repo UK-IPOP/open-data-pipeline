@@ -3,6 +3,8 @@
 [![Pipeline](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pipeline.yml/badge.svg?branch=main)](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pipeline.yml)
 [![Docs](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pages/pages-build-deployment)
 
+<img src="https://github.com/UK-IPOP/open-data-pipeline/assets/45318637/c5c50811-f242-42d2-adfd-fa5563c1a89f" alt="logo" width=500 />
+
 This repository contains the code for the Medical Examiner Open Data Pipeline.
 
 We currently fetch data from the following sources:
