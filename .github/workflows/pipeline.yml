@@ -273,11 +273,11 @@ jobs:
           name: drug-output
           path: data
 
-      - name: Install pandas-profiling
-        run: python3 -m pip install ydata-profiling
+      # - name: Install pandas-profiling
+      #   run: python3 -m pip install ydata-profiling
 
-      - name: Run profiling
-        run: ./scripts/profile.sh
+      # - name: Run profiling
+      #   run: ./scripts/profile.sh
 
       - name: Prepare Data for Release Assets
         run: ./scripts/prepare_data_release.sh

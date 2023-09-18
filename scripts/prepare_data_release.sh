@@ -4,9 +4,9 @@
 
 mkdir -p assets
 
-echo "Creating zip of reports..."
+# echo "Creating zip of reports..."
 # recurisve, verbose, highly compressed
-zip -rv9 assets/reports.zip reports/*.html 
+# zip -rv9 assets/reports.zip reports/*.html 
 
 echo "Creating zip of data sets..."
 for folder in data/*/; do
