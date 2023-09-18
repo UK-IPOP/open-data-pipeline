@@ -76,7 +76,7 @@
         "lon_field": "XCoordinate",
         "spatial_join": true
       },
-      "total_records": 66053,
+      "total_records": 66055,
       "url": "https://lio.milwaukeecountywi.gov/arcgis/rest/services/MedicalExaminer/PublicDataAccess/MapServer/1/query?f=json&where=1%3D1&outFields=*&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outSR=102100"
     }
   ]
