@@ -275,8 +275,7 @@ jobs:
           path: data
 
       - name: Install pandas-profiling
-        # TODO: specify 3.10 until 3.11 supported
-        run: pipx install --python python3.10 pandas-profiling
+        run: pipx install --python python3.11 ydata-profiling
 
       - name: Run profiling
         run: ./scripts/profile.sh
