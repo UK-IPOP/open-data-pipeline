@@ -274,7 +274,7 @@ jobs:
           path: data
 
       - name: Install pandas-profiling
-        run: pipx install --python python3.11 ydata-profiling
+        run: python3 -m pip install ydata-profiling
 
       - name: Run profiling
         run: ./scripts/profile.sh
