@@ -58,10 +58,10 @@
       "needs_pagination": true,
       "spatial_config": {
         "address_fields": {
-          "city": "EventCity",
-          "state": "EventState",
-          "street": "EventAddr",
-          "zip": "EventZip"
+          "city": "DeathCity",
+          "state": "DeathState",
+          "street": "DeathAddr",
+          "zip": "DeathZip"
         },
         "bounds": {
           "spatial_reference": {
