@@ -147,7 +147,7 @@ def build_url(
     Returns:
         str: The geocoding url.
     """
-    fat_url = f"https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&outFields=none&outSR=4326&token={key}&forStorage=false&locationType=street&sourceCounty=USA&maxLocations=1&maxOutOfRange=false"
+    fat_url = f"https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&outFields=none&outSR=4326&token={key}&forStorage=false&locationType=street&sourceCountry=USA&maxLocations=1&maxOutOfRange=false"
 
     # combines values that we have
     address_string = " ".join([str(v) for v in address_data.values() if v])
