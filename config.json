@@ -54,12 +54,12 @@
       ],
       "is_open_data": false,
       "name": "Milwaukee County",
-      "needs_geocoding": true,
+      "needs_geocoding": false,
       "needs_pagination": true,
       "spatial_config": {
         "address_fields": {
           "city": "DeathCity",
-          "state": "DeathState",
+          "state": null,
           "street": "DeathAddr",
           "zip": "DeathZip"
         },
