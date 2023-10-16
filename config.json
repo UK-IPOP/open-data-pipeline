@@ -48,6 +48,30 @@
     },
     {
       "drug_columns": [
+        "cod"
+      ],
+      "is_open_data": true,
+      "name": "Conneticut",
+      "needs_geocoding": false,
+      "needs_pagination": false,
+      "spatial_config": null,
+      "total_records": 10654,
+      "url": "https://data.ct.gov/api/odata/v4/rybz-nyjw"
+    },
+    {
+      "drug_columns": [
+        "cause_of_death"
+      ],
+      "is_open_data": true,
+      "name": "Santa Clara",
+      "needs_geocoding": false,
+      "needs_pagination": false,
+      "spatial_config": null,
+      "total_records": 24858,
+      "url": "https://data.sccgov.org/api/odata/v4/s3fb-yrjp"
+    },
+    {
+      "drug_columns": [
         "CauseA",
         "CauseB",
         "CauseOther"
