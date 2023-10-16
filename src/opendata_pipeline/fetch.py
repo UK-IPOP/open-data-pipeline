@@ -209,7 +209,6 @@ def get_sync_records(config: models.DataSource, current_index: int) -> int:
     Returns:
         int: newly updated index
     """
-    console.log(f"Fetching {config.name} records...")
     records = get_open_data_records(config)
     df = make_df_with_identifier(records, current_index)
     if config.name == "Cook County":
