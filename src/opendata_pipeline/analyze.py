@@ -117,9 +117,24 @@ def add_death_date_breakdowns(df: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame: The records dataframe with death date breakdowns added.
     """
     # handles MIL being different column name
-    death_date_col = "death_date" if "death_date" in df.columns else "DeathDate"
+    # determine death date
+    def identify_death_date_col(opts: list[str]) -> str:
+        if "death_date" in opts:
+            return "death_date"
+        elif "DeathDate" in opts:
+            return "DeathDate"
+        # conneticut
+        elif "date" in opts and "datetype" in opts:
+            return "date"
+        else:
+            raise ValueError(f"Could not identify death date column among: {opts}")
+    death_date_col = identify_death_date_col(list(df.columns))
     # convert to datetime
-    df[death_date_col] = pd.to_datetime(df[death_date_col])
+    if death_date_col == "DeathDate":
+        # handle MIL being in ms unix timestamp
+        df[death_date_col] = pd.to_datetime(df[death_date_col], unit="ms")
+    else:
+        df[death_date_col] = pd.to_datetime(df[death_date_col])
 
     # now add breakdowns with appropriate names
     df["death_day"] = df[death_date_col].dt.day
@@ -129,7 +144,6 @@ def add_death_date_breakdowns(df: pd.DataFrame) -> pd.DataFrame:
     df["death_day_of_week"] = df[death_date_col].dt.day_name()
     df["death_day_is_weekend"] = df[death_date_col].dt.day_of_week > 4
     df["death_day_week_of_year"] = df[death_date_col].dt.isocalendar().week
-
     return df
 
 
