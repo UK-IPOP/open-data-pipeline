@@ -4,6 +4,7 @@ It utilizes the ArcGIS geocoding API and asyncio to speed up the process.
 """
 from __future__ import annotations
 
+import time
 from pathlib import Path
 from typing import Any
 from rich.progress import track
@@ -174,22 +175,26 @@ async def get_geo_result(
     Returns:
         dict[str, Any] | None: The geocoding result or None if the request failed.
     """
-    async with session.get(url) as response:
-        # if returns error, try again
-        if response.status != 200:
-            return await get_geo_result(session, url, id_, data_source_name)
-        json_data = await response.json()
-        if results := json_data.get("candidates", None):
-            best = results[0]
-            return {
-                "CaseIdentifier": id_,
-                "latitude": best["location"]["y"],
-                "longitude": best["location"]["x"],
-                "score": best["score"],
-                "matched_address": best["address"],
-                "data_source": data_source_name,
-            }
-    return None
+    try:
+        async with session.get(url) as response:
+            # if returns error, try again
+            if response.status != 200:
+                time.sleep(5)
+                return await get_geo_result(session, url, id_, data_source_name)
+            json_data = await response.json()
+            if results := json_data.get("candidates", None):
+                best = results[0]
+                return {
+                    "CaseIdentifier": id_,
+                    "latitude": best["location"]["y"],
+                    "longitude": best["location"]["x"],
+                    "score": best["score"],
+                    "matched_address": best["address"],
+                    "data_source": data_source_name,
+                }
+    except asyncio.TimeoutError as te:
+            print(f"Failed with timeout: {te}")
+            return None 
 
 
 async def geocode_records(config: models.DataSource, key: str) -> list[dict[str, Any]]:
@@ -254,7 +259,8 @@ async def run(settings: models.Settings, alternate_key: str | None) -> None:
 
     geocoded_results: list[dict[str, Any]] = []
     for data_source in settings.sources:
-
+        if data_source.name != "Milwaukee County":
+            continue
         if data_source.needs_geocoding:
             source_set = await geocode_records(data_source, key)
             geocoded_results.extend(source_set)
