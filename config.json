@@ -78,7 +78,7 @@
       ],
       "is_open_data": false,
       "name": "Milwaukee County",
-      "needs_geocoding": false,
+      "needs_geocoding": true,
       "needs_pagination": true,
       "spatial_config": {
         "address_fields": {
