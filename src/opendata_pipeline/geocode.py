@@ -259,8 +259,6 @@ async def run(settings: models.Settings, alternate_key: str | None) -> None:
 
     geocoded_results: list[dict[str, Any]] = []
     for data_source in settings.sources:
-        if data_source.name != "Milwaukee County":
-            continue
         if data_source.needs_geocoding:
             source_set = await geocode_records(data_source, key)
             geocoded_results.extend(source_set)
