@@ -29,7 +29,7 @@
         "lon_field": "longitude",
         "spatial_join": true
       },
-      "total_records": 78575,
+      "total_records": 78710,
       "url": "https://datacatalog.cookcountyil.gov/api/odata/v4/cjeq-bs86"
     },
     {
@@ -43,7 +43,7 @@
       "needs_geocoding": false,
       "needs_pagination": false,
       "spatial_config": null,
-      "total_records": 79378,
+      "total_records": 79695,
       "url": "https://data.sandiegocounty.gov/api/odata/v4/jkvb-n4p7"
     },
     {
@@ -67,7 +67,7 @@
       "needs_geocoding": false,
       "needs_pagination": false,
       "spatial_config": null,
-      "total_records": 25124,
+      "total_records": 25199,
       "url": "https://data.sccgov.org/api/odata/v4/s3fb-yrjp"
     },
     {
@@ -100,7 +100,7 @@
         "lon_field": "XCoordinate",
         "spatial_join": true
       },
-      "total_records": 65806,
+      "total_records": 65863,
       "url": "https://lio.milwaukeecountywi.gov/arcgis/rest/services/MedicalExaminer/PublicDataAccess/MapServer/1/query?f=json&where=1%3D1&outFields=*&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outSR=102100"
     }
   ]
