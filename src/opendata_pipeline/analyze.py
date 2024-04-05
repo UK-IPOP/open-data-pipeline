@@ -288,10 +288,10 @@ def run(settings: models.Settings) -> None:
         # written into a folder for the data source so that we can zip
         data_dir = Path("data") / data_source.name.replace(" ", "_")
         data_dir.mkdir(exist_ok=True)
-        records_df.reset_index().to_csv(data_dir / "records.csv")
-        drug_df.reset_index().to_csv(data_dir / "drug.csv")
+        records_df.reset_index().to_csv(data_dir / "records.csv", index=False)
+        drug_df.reset_index().to_csv(data_dir / "drug.csv", index=False)
         if not geocoded_df.empty:
-            geocoded_df.reset_index().to_csv(data_dir / "geocoded.csv")
+            geocoded_df.reset_index().to_csv(data_dir / "geocoded.csv", index=False)
         # eventually add spatial
 
         console.log("Combining data...")
