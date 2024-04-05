@@ -89,7 +89,7 @@ def run(config: models.Settings) -> None:
             console.log("Writing to file...")
             pd.read_csv(
                 Path("data") / data_source.temp_wide_filename, low_memory=False
-            ).to_csv(Path("data") / data_source.wide_form_filename)
+            ).to_csv(Path("data") / data_source.wide_form_filename, index=False)
             continue
         console.log(f"Spatially joining {data_source.name}")
         records = read_records(data_source)
