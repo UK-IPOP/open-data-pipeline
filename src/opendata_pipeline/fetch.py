@@ -2,6 +2,7 @@
 
 It uses async requests if not using the open data portal to speed things up.
 """
+
 from __future__ import annotations
 
 from pathlib import Path

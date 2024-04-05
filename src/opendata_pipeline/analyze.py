@@ -7,13 +7,11 @@ You can actually run this as a script directly from the command line if you clon
 """
 
 from collections import defaultdict
-from dataclasses import dataclass
 from pathlib import Path
 import pandas as pd
 
 from opendata_pipeline import manage_config, models
 from opendata_pipeline.utils import console
-
 
 
 def read_geocoded_data(source: models.DataSource) -> pd.DataFrame:
@@ -116,6 +114,7 @@ def add_death_date_breakdowns(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: The records dataframe with death date breakdowns added.
     """
+
     # handles MIL being different column name
     # determine death date
     def identify_death_date_col(opts: list[str]) -> str:
@@ -128,6 +127,7 @@ def add_death_date_breakdowns(df: pd.DataFrame) -> pd.DataFrame:
             return "date"
         else:
             raise ValueError(f"Could not identify death date column among: {opts}")
+
     death_date_col = identify_death_date_col(list(df.columns))
     # convert to datetime
     if death_date_col == "DeathDate":
@@ -160,17 +160,19 @@ def make_wide(df: pd.DataFrame) -> pd.DataFrame:
     records: dict[str, dict[str, int]] = {}
     for row in df.reset_index().to_dict(orient="records"):
         # binary flag for each search term
-        if row['CaseIdentifier'] not in records:
-            records[row['CaseIdentifier']] = defaultdict(int)
-        records[row['CaseIdentifier']][row['search_term']] = 1
+        if row["CaseIdentifier"] not in records:
+            records[row["CaseIdentifier"]] = defaultdict(int)
+        records[row["CaseIdentifier"]][row["search_term"]] = 1
         # binary flag for search field
         # need to rename so doesn't overwrite on joining to source data
-        records[row['CaseIdentifier']][f"{row['search_field'].replace(' ', '_')}_matched"] = 1
+        records[row["CaseIdentifier"]][
+            f"{row['search_field'].replace(' ', '_')}_matched"
+        ] = 1
         # metadata binary flags, assumes metadata is pipe delimited
         # uses "group" to avoid potential column name conflicts
-        if row['metadata']:
-            for meta in row['metadata'].split("|"):
-                records[row['CaseIdentifier']][f"{meta.upper()}_meta"] = 1
+        if row["metadata"]:
+            for meta in row["metadata"].split("|"):
+                records[row["CaseIdentifier"]][f"{meta.upper()}_meta"] = 1
 
     flat_records = [{"CaseIdentifier": k, **v} for k, v in records.items()]
     wide_df = pd.DataFrame(flat_records).set_index("CaseIdentifier")
@@ -244,13 +246,13 @@ def handle_mil_eventdate(x: str):
         return None
     else:
         try:
-            return pd.to_datetime(x).strftime('%Y-%m-%d')
+            return pd.to_datetime(x).strftime("%Y-%m-%d")
         except:
             try:
-                return pd.to_datetime(x.split(' ')[0].strip()).strftime('%Y-%m-%d')
+                return pd.to_datetime(x.split(" ")[0].strip()).strftime("%Y-%m-%d")
             except:
                 return None
-    
+
 
 def run(settings: models.Settings) -> None:
     """Runs the data processing.
@@ -268,7 +270,9 @@ def run(settings: models.Settings) -> None:
         # a little hard coding needed
         if data_source.name == "Milwaukee County":
             # overwrite column with cleaned up version
-            records_df["EventDate"] = records_df["EventDate"].apply(handle_mil_eventdate)
+            records_df["EventDate"] = records_df["EventDate"].apply(
+                handle_mil_eventdate
+            )
         console.log("Added death date breakdowns to records")
 
         drug_df = read_drug_data(source=data_source)

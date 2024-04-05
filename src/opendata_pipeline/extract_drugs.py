@@ -4,6 +4,7 @@ It utilizes the drug columns (in order) listed in the config file (config.json).
 
 It also requires you to have the [drug extraction tool](https://github.com/UK-IPOP/drug-extraction) installed.
 """
+
 from __future__ import annotations
 import csv
 from pathlib import Path

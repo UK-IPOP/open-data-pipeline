@@ -58,9 +58,9 @@ def convert_to_geodataframe(df: pd.DataFrame) -> geopandas.GeoDataFrame:
     return geo_df
 
 
-def fetch_counties_and_tracts() -> tuple[
-    geopandas.GeoDataFrame, geopandas.GeoDataFrame
-]:
+def fetch_counties_and_tracts() -> (
+    tuple[geopandas.GeoDataFrame, geopandas.GeoDataFrame]
+):
     """Fetch Counties and Census Tracts geodataframes
 
     Order returned:
