@@ -6,6 +6,7 @@ The config.json file is used to store the configuration for the pipeline.
 
 It can also update a local config.json file.
 """
+
 from datetime import date
 import json
 from pathlib import Path

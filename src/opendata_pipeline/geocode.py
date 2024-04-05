@@ -2,6 +2,7 @@
 
 It utilizes the ArcGIS geocoding API and asyncio to speed up the process.
 """
+
 from __future__ import annotations
 
 import time
@@ -193,8 +194,8 @@ async def get_geo_result(
                     "data_source": data_source_name,
                 }
     except asyncio.TimeoutError as te:
-            print(f"Failed with timeout: {te}")
-            return None 
+        print(f"Failed with timeout: {te}")
+        return None
 
 
 async def geocode_records(config: models.DataSource, key: str) -> list[dict[str, Any]]:

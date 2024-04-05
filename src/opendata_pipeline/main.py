@@ -92,7 +92,7 @@ def extract_drugs(
     use_remote: bool = typer.Option(
         False,
         help="Whether to use the remote configuration or not. Default is False (i.e. use local config.json)",
-    )
+    ),
 ) -> None:
     """Extract drugs from data sources.
 
