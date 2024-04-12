@@ -199,6 +199,25 @@ def cook_county_drug_col(df: pd.DataFrame) -> pd.DataFrame:
     return dff
 
 
+def get_sacramento_records(config: models.DataSource) -> list[dict[str, typing.Any]]:
+    """Get records from Sacramento.
+
+    We use this custom function since we are able to get the records directly via
+    a URL, but we need to parse the structure after and the url is not in the
+    open data portal format.
+    """
+    console.log(f"Fetching {config.name} records...")
+    response = requests.get(config.url)
+    data: dict[str, typing.Any] = response.json()
+    if "features" not in data:
+        raise ValueError(
+            f"Unable to get records from {config.url}, `features` key not in response"
+        )
+    if len(data["features"]) == 0:
+        raise ValueError(f"No records found in {config.url}")
+    return [r["attributes"] for r in data["features"]]
+
+
 def get_sync_records(config: models.DataSource, current_index: int) -> int:
     """Get records from url synchronously.
 
@@ -210,7 +229,10 @@ def get_sync_records(config: models.DataSource, current_index: int) -> int:
     Returns:
         int: newly updated index
     """
-    records = get_open_data_records(config)
+    if config.name == "Sacramento":
+        records = get_sacramento_records(config)
+    else:
+        records = get_open_data_records(config)
     df = make_df_with_identifier(records, current_index)
     if config.name == "Cook County":
         # create composite drug column
