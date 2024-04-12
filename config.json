@@ -107,7 +107,7 @@
       "drug_columns": [
         "Cause"
       ],
-      "is_open_data": false,
+      "is_open_data": true,
       "name": "Sacramento",
       "needs_geocoding": false,
       "needs_pagination": false,
