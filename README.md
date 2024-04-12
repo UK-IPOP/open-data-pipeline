@@ -12,6 +12,9 @@ We currently fetch data from the following sources:
 - [Cook County Medical Examiner's Archives](https://datacatalog.cookcountyil.gov/Public-Safety/Medical-Examiner-Case-Archive/cjeq-bs86)
 - [San Diego Medical Examiner's Office](https://data.sandiegocounty.gov/Safety/Medical-Examiner-Cases/jkvb-n4p7)
 - [Milwaukee County Medical Examiner's Office](https://county.milwaukee.gov/EN/Medical-Examiner)
+- [Connecticut (State) Accidental Drug Deaths](https://data.ct.gov/Health-and-Human-Services/Accidental-Drug-Related-Deaths-2012-2022/rybz-nyjw/about_data)
+- [Santa Clara County Medical Examiner's Office](https://data.sccgov.org/Health/Medical-Examiner-Coroner-Full-dataset/s3fb-yrjp/about_data)
+- [Sacramento County Medical Examiner's Office](https://sacramentocounty.maps.arcgis.com/apps/dashboards/0661fb44435b4611bf52be84708c4591)
 
 The results of this data are used in various other analysis here on GitHub:
 
