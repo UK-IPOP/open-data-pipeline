@@ -102,6 +102,18 @@
       },
       "total_records": 67099,
       "url": "https://lio.milwaukeecountywi.gov/arcgis/rest/services/MedicalExaminer/PublicDataAccess/MapServer/1/query?f=json&where=1%3D1&outFields=*&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outSR=102100"
+    },
+    {
+      "drug_columns": [
+        "Cause"
+      ],
+      "is_open_data": false,
+      "name": "Sacramento",
+      "needs_geocoding": false,
+      "needs_pagination": false,
+      "spatial_config": null,
+      "total_records": 3000,
+      "url": "https://services1.arcgis.com/5NARefyPVtAeuJPU/arcgis/rest/services/Drug_Deaths/FeatureServer/0/query?f=json&outFields=*&returnGeometry=false&spatialRel=esriSpatialRelIntersects&where=DeathYear%20BETWEEN%201900%20AND%202024"
     }
   ]
 }
