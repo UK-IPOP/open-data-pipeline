@@ -82,7 +82,8 @@ In addition to providing the extracted drugs as a separate file in each release,
 | :--- | :--- |
 | `*_1` | `*` drug found in first search column provided in drug configuration |
 | `*_2` | `*` drug found in second search column provided in drug configuration |
-| `*_tag` | Drug of `*` category/class found in this record across _any_ search column.
+| `*_meta` | Drug of `*` category/class found in this record across _any_ search column.
+
 
 ## Requirements
 
