@@ -29,7 +29,7 @@
         "lon_field": "longitude",
         "spatial_join": true
       },
-      "total_records": 84665,
+      "total_records": 85011,
       "url": "https://datacatalog.cookcountyil.gov/api/odata/v4/cjeq-bs86"
     },
     {
@@ -43,7 +43,7 @@
       "needs_geocoding": false,
       "needs_pagination": false,
       "spatial_config": null,
-      "total_records": 82674,
+      "total_records": 82997,
       "url": "https://data.sandiegocounty.gov/api/odata/v4/jkvb-n4p7"
     },
     {
@@ -67,7 +67,7 @@
       "needs_geocoding": false,
       "needs_pagination": false,
       "spatial_config": null,
-      "total_records": 28728,
+      "total_records": 28906,
       "url": "https://data.sccgov.org/api/odata/v4/s3fb-yrjp"
     },
     {
@@ -100,7 +100,7 @@
         "lon_field": "XCoordinate",
         "spatial_join": true
       },
-      "total_records": 68345,
+      "total_records": 68476,
       "url": "https://lio.milwaukeecountywi.gov/arcgis/rest/services/MedicalExaminer/PublicDataAccess/MapServer/1/query?f=json&where=1%3D1&outFields=*&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outSR=102100"
     },
     {
@@ -112,7 +112,7 @@
       "needs_geocoding": false,
       "needs_pagination": false,
       "spatial_config": null,
-      "total_records": 1130,
+      "total_records": 1142,
       "url": "https://services1.arcgis.com/5NARefyPVtAeuJPU/arcgis/rest/services/Drug_Deaths/FeatureServer/0/query?f=json&outFields=*&returnGeometry=false&spatialRel=esriSpatialRelIntersects&where=DeathYear%20BETWEEN%201900%20AND%202024"
     }
   ]
