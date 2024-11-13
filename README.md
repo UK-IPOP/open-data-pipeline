@@ -15,6 +15,7 @@ We currently fetch data from the following sources:
 - [Connecticut (State) Accidental Drug Deaths](https://data.ct.gov/Health-and-Human-Services/Accidental-Drug-Related-Deaths-2012-2022/rybz-nyjw/about_data)
 - [Santa Clara County Medical Examiner's Office](https://data.sccgov.org/Health/Medical-Examiner-Coroner-Full-dataset/s3fb-yrjp/about_data)
 - [Sacramento County Medical Examiner's Office](https://sacramentocounty.maps.arcgis.com/apps/dashboards/0661fb44435b4611bf52be84708c4591)
+- [Pima County Medical Examiner's Office](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.pima.gov/212/Medical-Examiner&ved=2ahUKEwidg83ljdqJAxWYwskDHdbRE4YQFnoECDkQAQ&usg=AOvVaw2T_hdJ3x-pqh07VFa9n6B8)
 
 The results of this data are used in various other analysis here on GitHub:
 
@@ -37,7 +38,7 @@ The data is then available for download from the [releases page](https://github.
 Further, the entire workflow effectively runs a series of commands using the CLI application `opendata-pipeline` which is located in the `src` directory.
 
 This is also available via a docker image hosted on [ghcr.io](https://github.com/UK-IPOP/open-data-pipeline/pkgs/container/opendata-pipeline). The
-benefits of using the CLI via a docker image is that you don't have to have Python3.10 or the drug toolbox on your local machine 🙂.
+benefits of using the CLI via a docker image is that you don't have to have Python or the drug toolbox on your local machine 🙂.
 
 We utilize async methods to speed up the large number of web requests we make to the data sources.
 
@@ -87,15 +88,14 @@ In addition to providing the extracted drugs as a separate file in each release,
 
 ## Requirements
 
-- Python 3.10
-- Drug Extraction ToolBox
+- `uv`
 
 ## Installation
 
-To install the python cli I recommend using [pipx](https://pypa.github.io/pipx/).
+To install the python cli I recommend using [uv](https://github.com/astral-sh/uv).
 
 ```bash
-pipx install opendata-pipeline
+uvx opendata-pipeline
 ```
 
 To install the docker image, you can use the following command:
