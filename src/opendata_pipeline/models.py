@@ -6,8 +6,10 @@ The settings are stored in a JSON file in the user's home directory.
 
 from __future__ import annotations
 
-from pydantic import BaseSettings, Field, BaseModel, validator
 from typing import Optional
+
+from pydantic import BaseModel, Field, validator
+from pydantic_settings import BaseSettings
 
 
 class SpatialReference(BaseModel):
