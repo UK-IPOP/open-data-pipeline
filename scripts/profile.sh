@@ -10,7 +10,7 @@ for file in data/*_wide_form.csv; do
     # take action on each file. $f store current file name
     title=$(basename $file .csv)
 
-    ydata_profiling $file "reports/$title.html" \
+    uvx --python="3.12" --with="setuptools" ydata_profiling $file "reports/$title.html" \
         --title "Pandas Profiling Report for $title" \
         --infer_dtypes \
         --silent \
