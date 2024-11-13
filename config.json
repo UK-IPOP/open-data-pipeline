@@ -114,6 +114,43 @@
       "spatial_config": null,
       "total_records": 1171,
       "url": "https://services1.arcgis.com/5NARefyPVtAeuJPU/arcgis/rest/services/Drug_Deaths/FeatureServer/0/query?f=json&outFields=*&returnGeometry=false&spatialRel=esriSpatialRelIntersects&where=DeathYear%20BETWEEN%201900%20AND%202024"
+    },
+    {
+      "drug_columns": [
+        "CAUSE",
+        "DC Worksheet - Immediate cause",
+        "DC Worksheet - Cause of death 2",
+        "DC Worksheet - Cause of death 3",
+        "DC Worksheet - Cause of death 4",
+        "DC Worksheet - Other conditions"
+      ],
+      "is_open_data": false,
+      "name": "Pima",
+      "needs_geocoding": true,
+      "spatial_config": {
+        "address_fields": {
+          "city": "Death Location - City",
+          "state": "Death Location - State",
+          "street": "Death Location - Address 1",
+          "zip": "Death Location - Zip",
+        },
+        "bounds": {
+          "spatial_reference": {
+            "wkid": 4326
+          },
+          "xmax": -109.0,
+          "xmin": -114.0,
+          "ymax": 33.0,
+          "ymin": 31.0
+        },
+        "lat_field": "Death Location - Location other",
+        "lon_field": "Death Location - Location other",
+        "spatial_join": true
+      },
+      "needs_pagination": false,
+      "total_records": 3300,
+      "url": "file"
     }
   ]
 }
+

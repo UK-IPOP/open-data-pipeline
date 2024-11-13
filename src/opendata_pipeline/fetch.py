@@ -5,14 +5,14 @@ It uses async requests if not using the open data portal to speed things up.
 
 from __future__ import annotations
 
-from pathlib import Path
-import typing
-import requests
-import pandas as pd
-import aiohttp
 import asyncio
-from rich.progress import track
+import typing
+from pathlib import Path
 
+import aiohttp
+import pandas as pd
+import requests
+from rich.progress import track
 
 from opendata_pipeline import manage_config, models
 from opendata_pipeline.utils import console
@@ -218,6 +218,22 @@ def get_sacramento_records(config: models.DataSource) -> list[dict[str, typing.A
     return [r["attributes"] for r in data["features"]]
 
 
+def get_pima_records(config: models.DataSource) -> list[dict[str, typing.Any]]:
+    """Get records from Pima.
+
+    We use this function to load the locally saved Pima records.
+    """
+    console.log(f"Fetching {config.name} records...")
+    historical = pd.read_csv(
+        Path().cwd() / "data" / "pima_records.csv", low_memory=False
+    )
+    updated = pd.read_csv(
+        Path().cwd() / "data" / "updated_pima_records.csv", low_memory=False
+    )
+    df = pd.concat([historical, updated], axis=1)
+    return df.to_dict(orient="records")
+
+
 def get_sync_records(config: models.DataSource, current_index: int) -> int:
     """Get records from url synchronously.
 
@@ -231,6 +247,8 @@ def get_sync_records(config: models.DataSource, current_index: int) -> int:
     """
     if config.name == "Sacramento":
         records = get_sacramento_records(config)
+    elif config.name == "Pima":
+        records = get_pima_records(config)
     else:
         records = get_open_data_records(config)
     df = make_df_with_identifier(records, current_index)
