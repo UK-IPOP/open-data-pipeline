@@ -132,7 +132,7 @@
           "city": "Death Location - City",
           "state": "Death Location - State",
           "street": "Death Location - Address 1",
-          "zip": "Death Location - Zip",
+          "zip": "Death Location - Zip"
         },
         "bounds": {
           "spatial_reference": {
@@ -153,4 +153,3 @@
     }
   ]
 }
-
