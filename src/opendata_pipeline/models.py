@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import Optional
 
 from pydantic import BaseModel, Field, validator
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class SpatialReference(BaseModel):
@@ -156,14 +156,20 @@ class DataSource(BaseModel):
 class Settings(BaseSettings):
     """The settings for the package."""
 
-    arcgis_api_key: Optional[str] = Field(None, env="ARCGIS_API_KEY", read_only=True)
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="allow",
+    )
+
+    arcgis_api_key: Optional[str] = Field(None, alias="ARCGIS_API_KEY")
     """The ArcGIS API key for geocoding.
 
     Read from .env file or environment variable using `ARCGIS_API_KEY` variable.
 
     Required for geocoding.
     """
-    github_token: Optional[str] = Field(None, env="GH_TOKEN", read_only=True)
+    github_token: Optional[str] = Field(None, alias="GH_TOKEN")
     """The GitHub token for uploading the data.
 
     Read from .env file or environment variable using `GH_TOKEN` variable.
@@ -173,25 +179,6 @@ class Settings(BaseSettings):
 
     sources: list[DataSource] = Field(..., description="List of data sources")
     """List of data sources."""
-
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-
-        # this is a typo in pydantic source code
-        # might not actually need this since no custom json parsing
-        @classmethod
-        def customise_sources(
-            cls,
-            init_settings,
-            env_settings,
-            file_secret_settings,
-        ):
-            return (
-                init_settings,
-                env_settings,
-                file_secret_settings,
-            )
 
 
 if __name__ == "__main__":
