@@ -236,17 +236,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
-
-      # setup python
-      - name: Set up Python
-        run: uv python install
-
-      # install latest version of CLI
-      - name: Install the project
-        run: uv sync --all-extras --dev
-
       # download records (should be in data folder)
       - name: Download Records Artifact
         uses: actions/download-artifact@v3
