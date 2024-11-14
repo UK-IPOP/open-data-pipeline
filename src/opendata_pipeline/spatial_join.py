@@ -1,6 +1,8 @@
 from pathlib import Path
-import pandas as pd
+
 import geopandas
+import pandas as pd
+
 from opendata_pipeline import manage_config, models
 from opendata_pipeline.utils import console
 
@@ -24,12 +26,21 @@ def apply_composite_lat_long(
     row, config: models.GeoConfig
 ) -> tuple[str | None, str | None]:
     """Apply the composite latitude and longitude to the dataframe."""
-    lat_val = row[config.lat_field.lower()]
-    lon_val = row[config.lon_field.lower()]
-    # TODO: switch to using pd.notna and pd.isna
+    lat_val = row[config.lat_field.lower().replace(" ", "_")]
+    lon_val = row[config.lon_field.lower().replace(" ", "_")]
     if pd.notna(lat_val) and pd.notna(lon_val):
-        return lat_val, lon_val
+        if isinstance(lat_val, str):
+            x = lat_val.replace(" ", "", -1)
+            if "," in x:
+                lat, lon = x.split(",")
+                return lat, lon
+            else:
+                return None, None
+        else:
+            return lat_val, lon_val
     # fields that may exist in the data
+    if "geocoded_latitude" not in row or "geocoded_longitude" not in row:
+        return None, None
     elif pd.notna(row["geocoded_latitude"]) and pd.notna(row["geocoded_longitude"]):
         return row["geocoded_latitude"], row["geocoded_longitude"]
     else:
@@ -58,23 +69,18 @@ def convert_to_geodataframe(df: pd.DataFrame) -> geopandas.GeoDataFrame:
     return geo_df
 
 
-def fetch_counties_and_tracts() -> (
-    tuple[geopandas.GeoDataFrame, geopandas.GeoDataFrame]
-):
-    """Fetch Counties and Census Tracts geodataframes
+def fetch_tracts(fips_code: str) -> geopandas.GeoDataFrame:
+    """Fetch Census Tracts geodataframes
 
-    Order returned:
-        county, census
+    Args:
+        fips_code (str): The Census FIPS Code (i.e. 17 for Illinois)
+
+    Returns:
+        geopandas.GeoDataFrame: The census tracts geodataframe
     """
-    urls = [
-        # TODO update counties to 2021 shapefile
-        #  https://www2.census.gov/geo/tiger/GENZ2021/shp/
-        "https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_17_cousub_500k.zip",  # county
-        "https://www2.census.gov/geo/tiger/TIGER2021/TRACT/tl_2021_17_tract.zip",  # census tracts
-    ]
-    dataset1: geopandas.GeoDataFrame = geopandas.read_file(urls[0]).to_crs("EPSG:4326")
-    dataset2: geopandas.GeoDataFrame = geopandas.read_file(urls[1]).to_crs("EPSG:4326")
-    return dataset1, dataset2
+    url = f"https://www2.census.gov/geo/tiger/TIGER2024/TRACT/tl_2024_{fips_code}_tract.zip"
+    dataset: geopandas.GeoDataFrame = geopandas.read_file(url).to_crs("EPSG:4326")
+    return dataset
 
 
 def run(config: models.Settings) -> None:
@@ -82,8 +88,8 @@ def run(config: models.Settings) -> None:
     Args:
         config (models.Settings): The settings for the app.
     """
-    county_geodf, census_geodf = fetch_counties_and_tracts()
     for data_source in config.sources:
+        tracts_geodf = fetch_tracts(fips_code=data_source.state_fips_code)
         if data_source.spatial_config is None:
             console.log(f"{data_source.name} needs no spatial joining")
             console.log("Writing to file...")
@@ -99,12 +105,10 @@ def run(config: models.Settings) -> None:
         console.log(
             f"Starting shape -> Rows: {geo_df.shape[0]} Columns: {geo_df.shape[1]}"
         )
-        for geo_source in [county_geodf, census_geodf]:
-            geo_df = geopandas.sjoin(geo_df, geo_source, how="left", predicate="within")
-            geo_df.drop(columns=["index_right"], inplace=True, errors="ignore")
-            console.log(
-                f"Updated shape -> Rows: {geo_df.shape[0]} Columns: {geo_df.shape[1]}"
-            )
+        geo_df = geopandas.sjoin(geo_df, tracts_geodf, how="left", predicate="within")
+        console.log(
+            f"Updated shape -> Rows: {geo_df.shape[0]} Columns: {geo_df.shape[1]}"
+        )
 
         console.log("Writing to file...")
         geo_df.to_csv(Path("data") / data_source.wide_form_filename, index=False)

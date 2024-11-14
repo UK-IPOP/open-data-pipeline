@@ -101,6 +101,19 @@ class DataSource(BaseModel):
     )
     """Configuration for geocoding this dataset"""
 
+    date_field: str = Field(
+        ..., description="Date field, usually death-date, to analyze for timeseries"
+    )
+    """Date column to analyze for timeseries"""
+
+    state_fips_code: str = Field(..., description="The Census FIPS code for this state")
+    """The Census FIPS code (with leading zeros when needed) for this State.
+
+    Example: Illinois=17, Arizona=04
+
+    Can find easily via Google search.
+    """
+
     @validator("is_open_data")
     def validate_pagination_and_open_data(cls, v, values):
         """Validate that only one of the pagination and open data flags is set."""
