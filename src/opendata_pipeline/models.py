@@ -6,8 +6,10 @@ The settings are stored in a JSON file in the user's home directory.
 
 from __future__ import annotations
 
-from pydantic import BaseSettings, Field, BaseModel, validator
 from typing import Optional
+
+from pydantic import BaseModel, Field, validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class SpatialReference(BaseModel):
@@ -99,6 +101,19 @@ class DataSource(BaseModel):
     )
     """Configuration for geocoding this dataset"""
 
+    date_field: str = Field(
+        ..., description="Date field, usually death-date, to analyze for timeseries"
+    )
+    """Date column to analyze for timeseries"""
+
+    state_fips_code: str = Field(..., description="The Census FIPS code for this state")
+    """The Census FIPS code (with leading zeros when needed) for this State.
+
+    Example: Illinois=17, Arizona=04
+
+    Can find easily via Google search.
+    """
+
     @validator("is_open_data")
     def validate_pagination_and_open_data(cls, v, values):
         """Validate that only one of the pagination and open data flags is set."""
@@ -154,14 +169,20 @@ class DataSource(BaseModel):
 class Settings(BaseSettings):
     """The settings for the package."""
 
-    arcgis_api_key: Optional[str] = Field(None, env="ARCGIS_API_KEY", read_only=True)
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="allow",
+    )
+
+    arcgis_api_key: Optional[str] = Field(None, alias="ARCGIS_API_KEY")
     """The ArcGIS API key for geocoding.
 
     Read from .env file or environment variable using `ARCGIS_API_KEY` variable.
 
     Required for geocoding.
     """
-    github_token: Optional[str] = Field(None, env="GH_TOKEN", read_only=True)
+    github_token: Optional[str] = Field(None, alias="GH_TOKEN")
     """The GitHub token for uploading the data.
 
     Read from .env file or environment variable using `GH_TOKEN` variable.
@@ -171,25 +192,6 @@ class Settings(BaseSettings):
 
     sources: list[DataSource] = Field(..., description="List of data sources")
     """List of data sources."""
-
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-
-        # this is a typo in pydantic source code
-        # might not actually need this since no custom json parsing
-        @classmethod
-        def customise_sources(
-            cls,
-            init_settings,
-            env_settings,
-            file_secret_settings,
-        ):
-            return (
-                init_settings,
-                env_settings,
-                file_secret_settings,
-            )
 
 
 if __name__ == "__main__":

@@ -5,14 +5,14 @@ It uses async requests if not using the open data portal to speed things up.
 
 from __future__ import annotations
 
-from pathlib import Path
-import typing
-import requests
-import pandas as pd
-import aiohttp
 import asyncio
-from rich.progress import track
+import typing
+from pathlib import Path
 
+import httpx
+import pandas as pd
+import requests
+from rich.progress import track
 
 from opendata_pipeline import manage_config, models
 from opendata_pipeline.utils import console
@@ -66,7 +66,7 @@ def build_url(offset: int, base_url: str) -> str:
 # it may be common to other ARC GIS APIs but until we have more examples
 # we will keep this function here
 async def get_record_set(
-    session: aiohttp.ClientSession, url: str
+    client: httpx.AsyncClient, url: str
 ) -> list[dict[str, typing.Any]]:
     """Get record set from url.
 
@@ -81,16 +81,16 @@ async def get_record_set(
     Returns:
         list[dict[str, typing.Any]]: list of records
     """
-    async with session.get(url) as resp:
-        # if returns error, try again
-        if resp.status != 200:
-            return await get_record_set(session, url)
-        resp_data: dict[str, typing.Any] = await resp.json()
-        if "features" in resp_data:
-            if len(resp_data["features"]) == 0:
-                return []
-            return [r["attributes"] for r in resp_data["features"]]
-    return await get_record_set(session, url)
+    resp = await client.get(url)
+    # if returns error, try again
+    if resp.status_code != 200:
+        return await get_record_set(client, url)
+    resp_data: dict[str, typing.Any] = resp.json()
+    if "features" in resp_data:
+        if len(resp_data["features"]) == 0:
+            return []
+        return [r["attributes"] for r in resp_data["features"]]
+    return await get_record_set(client, url)
 
 
 def make_df_with_identifier(
@@ -147,30 +147,24 @@ async def get_async_records(config: models.DataSource, current_index: int) -> in
         int: newly updated index
     """
     console.log(f"Fetching {config.name} records...")
-    async with aiohttp.ClientSession() as session:
-        tasks = []
+    records = []
+    async with httpx.AsyncClient(
+        timeout=httpx.Timeout(20),
+        limits=httpx.Limits(max_keepalive_connections=5, max_connections=10),
+    ) as client:
         # we add 2000 assuming there were more records than last week
-        for offset in range(0, config.total_records + 2000, 1000):
+        ranges = list(range(0, config.total_records + 2000, 1000))
+        for offset in track(ranges):
             url = build_url(base_url=config.url, offset=offset)
-            tasks.append(asyncio.ensure_future(get_record_set(session, url)))
-
-        records = []
-        for task in track(
-            asyncio.as_completed(tasks),
-            description="Fetching async records...",
-            total=len(tasks),
-        ):
-            record_set = await task
+            record_set = await get_record_set(client, url)
             records.extend(record_set)
 
-        console.log(
-            f"Fetched {len(records):,} records asynchronously from {config.url}"
-        )
+    console.log(f"Fetched {len(records):,} records asynchronously from {config.url}")
 
-        df = make_df_with_identifier(records, current_index)
-        export_drug_df(df, config)
-        export_jsonlines_from_df(df, config)
-        return len(records)
+    df = make_df_with_identifier(records, current_index)
+    export_drug_df(df, config)
+    export_jsonlines_from_df(df, config)
+    return len(records)
 
 
 def cook_county_drug_col(df: pd.DataFrame) -> pd.DataFrame:
@@ -218,6 +212,17 @@ def get_sacramento_records(config: models.DataSource) -> list[dict[str, typing.A
     return [r["attributes"] for r in data["features"]]
 
 
+def get_pima_records(config: models.DataSource) -> list[dict[str, typing.Any]]:
+    """Get records from Pima.
+
+    We use this function to load the locally saved Pima records.
+    """
+    console.log(f"Fetching {config.name} records...")
+    df = pd.read_csv(Path().cwd() / "data" / "pima_records.csv", low_memory=False)
+
+    return df.to_dict(orient="records")
+
+
 def get_sync_records(config: models.DataSource, current_index: int) -> int:
     """Get records from url synchronously.
 
@@ -229,8 +234,10 @@ def get_sync_records(config: models.DataSource, current_index: int) -> int:
     Returns:
         int: newly updated index
     """
-    if config.name == "Sacramento":
+    if config.name == "Sacramento County":
         records = get_sacramento_records(config)
+    elif config.name == "Pima County":
+        records = get_pima_records(config)
     else:
         records = get_open_data_records(config)
     df = make_df_with_identifier(records, current_index)

@@ -5,13 +5,14 @@ It utilizes the ArcGIS geocoding API and asyncio to speed up the process.
 
 from __future__ import annotations
 
-import time
+import asyncio
+import urllib.parse
 from pathlib import Path
 from typing import Any
-from rich.progress import track
+
+import httpx
 import orjson
-import aiohttp
-import asyncio
+from rich.progress import track
 
 from opendata_pipeline import manage_config, models
 from opendata_pipeline.utils import console
@@ -155,11 +156,17 @@ def build_url(
     address_string = " ".join([str(v) for v in address_data.values() if v])
 
     # the string will get url encoded by requests, we needed to handle the data
-    return f"{fat_url}&searchExtent={bounds.json()}&SingleLine={address_string}"
+    url_string = f"{fat_url}&searchExtent={urllib.parse.quote_plus(bounds.json())}&SingleLine={urllib.parse.quote_plus(address_string)}"
+    return url_string
 
 
 async def get_geo_result(
-    session: aiohttp.ClientSession, url: str, id_: int, data_source_name: str
+    client: httpx.AsyncClient,
+    url: str,
+    id_: int,
+    data_source_name: str,
+    retry_number: int = 0,
+    max_retries: int = 5,
 ) -> dict[str, Any] | None:
     """Get the geocoding result from an async web request to ArcGIS.
 
@@ -177,25 +184,48 @@ async def get_geo_result(
         dict[str, Any] | None: The geocoding result or None if the request failed.
     """
     try:
-        async with session.get(url) as response:
-            # if returns error, try again
-            if response.status != 200:
-                time.sleep(5)
-                return await get_geo_result(session, url, id_, data_source_name)
-            json_data = await response.json()
-            if results := json_data.get("candidates", None):
-                best = results[0]
-                return {
-                    "CaseIdentifier": id_,
-                    "latitude": best["location"]["y"],
-                    "longitude": best["location"]["x"],
-                    "score": best["score"],
-                    "matched_address": best["address"],
-                    "data_source": data_source_name,
-                }
-    except asyncio.TimeoutError as te:
-        print(f"Failed with timeout: {te}")
-        return None
+        response = await client.get(url)
+        # if returns error, try again
+        if response.status_code != 200:
+            if retry_number > max_retries:
+                raise ValueError("Exceeded max_retries")
+            print(
+                f"Bad response code: {response.status_code} Retry: {retry_number}/{max_retries} ID: {id_} URL: {url}"
+            )
+            await asyncio.sleep(10)
+            return await get_geo_result(
+                client,
+                url,
+                id_,
+                data_source_name,
+                retry_number=retry_number + 1,
+            )
+        json_data = response.json()
+        if results := json_data.get("candidates", None):
+            best = results[0]
+            return {
+                "CaseIdentifier": id_,
+                "latitude": best["location"]["y"],
+                "longitude": best["location"]["x"],
+                "score": best["score"],
+                "matched_address": best["address"],
+                "data_source": data_source_name,
+            }
+    except httpx.TimeoutException as te:
+        print(
+            f"Failed with timeout: {te} Retry: {retry_number}/{max_retries} ID: {id_}"
+        )
+        if retry_number > max_retries:
+            raise ValueError("Exceeded max_retries")
+        await asyncio.sleep(retry_number + 1 * 10)
+        return await get_geo_result(
+            client,
+            url,
+            id_,
+            data_source_name,
+            retry_number + 1,
+            max_retries,
+        )
 
 
 async def geocode_records(config: models.DataSource, key: str) -> list[dict[str, Any]]:
@@ -213,9 +243,9 @@ async def geocode_records(config: models.DataSource, key: str) -> list[dict[str,
         raise ValueError("spatial_config is required for geocoding")
 
     console.log(f"Geocoding {len(records)} records from {config.name}...")
-    async with aiohttp.ClientSession() as session:
-        tasks = []
-        for record in records:
+    results: list[dict[str, Any]] = []
+    async with httpx.AsyncClient(timeout=httpx.Timeout(20)) as client:
+        for record in track(records):
             data = prepare_address(record, config)
             if data is None:
                 continue
@@ -223,19 +253,12 @@ async def geocode_records(config: models.DataSource, key: str) -> list[dict[str,
             url = build_url(
                 bounds=config.spatial_config.bounds, address_data=address_data, key=key
             )
-            tasks.append(
-                get_geo_result(
-                    session=session, url=url, id_=id_, data_source_name=config.name
-                )
+            result: dict[str, Any] | None = await get_geo_result(
+                client=client,
+                url=url,
+                id_=id_,
+                data_source_name=config.name,
             )
-
-        results: list[dict[str, Any]] = []
-        for task in track(
-            asyncio.as_completed(tasks),
-            total=len(tasks),
-            description=f"Geocoding records for {config.name}",
-        ):
-            result: dict[str, Any] | None = await task
             if result is not None:
                 results.append(result)
 

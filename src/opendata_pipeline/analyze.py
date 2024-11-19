@@ -8,6 +8,7 @@ You can actually run this as a script directly from the command line if you clon
 
 from collections import defaultdict
 from pathlib import Path
+
 import pandas as pd
 
 from opendata_pipeline import manage_config, models
@@ -105,45 +106,33 @@ def read_records(source: models.DataSource) -> pd.DataFrame:
     return df
 
 
-def add_death_date_breakdowns(df: pd.DataFrame) -> pd.DataFrame:
+def add_death_date_breakdowns(
+    df: pd.DataFrame, source: models.DataSource
+) -> pd.DataFrame:
     """Adds death date breakdowns to the data IN PLACE.
 
     Args:
         df (pd.DataFrame): The records dataframe.
+        source (models.DataSource): The source config
 
     Returns:
         pd.DataFrame: The records dataframe with death date breakdowns added.
     """
-
-    # handles MIL being different column name
-    # determine death date
-    def identify_death_date_col(opts: list[str]) -> str:
-        if "death_date" in opts:
-            return "death_date"
-        elif "DeathDate" in opts:
-            return "DeathDate"
-        # conneticut
-        elif "date" in opts and "datetype" in opts:
-            return "date"
-        else:
-            raise ValueError(f"Could not identify death date column among: {opts}")
-
-    death_date_col = identify_death_date_col(list(df.columns))
-    # convert to datetime
-    if death_date_col == "DeathDate":
-        # handle MIL being in ms unix timestamp
-        df[death_date_col] = pd.to_datetime(df[death_date_col], unit="ms")
+    date_col = source.date_field
+    # some sources are Unix timestamps
+    if source.name in ("Milwaukee County", "Sacramento County"):
+        df[date_col] = pd.to_datetime(df[date_col], unit="ms")
     else:
-        df[death_date_col] = pd.to_datetime(df[death_date_col])
+        df[date_col] = pd.to_datetime(df[date_col])
 
     # now add breakdowns with appropriate names
-    df["death_day"] = df[death_date_col].dt.day
-    df["death_month"] = df[death_date_col].dt.month_name()
-    df["death_month_num"] = df[death_date_col].dt.month
-    df["death_year"] = df[death_date_col].dt.year
-    df["death_day_of_week"] = df[death_date_col].dt.day_name()
-    df["death_day_is_weekend"] = df[death_date_col].dt.day_of_week > 4
-    df["death_day_week_of_year"] = df[death_date_col].dt.isocalendar().week
+    df["death_day"] = df[date_col].dt.day
+    df["death_month"] = df[date_col].dt.month_name()
+    df["death_month_num"] = df[date_col].dt.month
+    df["death_year"] = df[date_col].dt.year
+    df["death_day_of_week"] = df[date_col].dt.day_name()
+    df["death_day_is_weekend"] = df[date_col].dt.day_of_week > 4
+    df["death_day_week_of_year"] = df[date_col].dt.isocalendar().week
     return df
 
 
@@ -231,7 +220,7 @@ def combine(
 
 
 def cleanup_columns(df: pd.DataFrame):
-    """Cleans up the column names IN PLACE.
+    """Cleans up the column names.
 
     Args:
         df (pd.DataFrame): The data.
@@ -266,7 +255,7 @@ def run(settings: models.Settings) -> None:
             f"Read {len(records_df)} records from {data_source.records_filename}"
         )
 
-        add_death_date_breakdowns(df=records_df)
+        add_death_date_breakdowns(df=records_df, source=data_source)
         # a little hard coding needed
         if data_source.name == "Milwaukee County":
             # overwrite column with cleaned up version

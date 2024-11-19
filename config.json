@@ -1,119 +1,168 @@
 {
   "sources": [
     {
+      "name": "Cook County",
+      "url": "https://datacatalog.cookcountyil.gov/api/odata/v4/cjeq-bs86",
+      "total_records": 85899,
+      "needs_pagination": false,
+      "is_open_data": true,
       "drug_columns": [
         "primary_cod",
         "secondarycause"
       ],
-      "is_open_data": true,
-      "name": "Cook County",
       "needs_geocoding": true,
-      "needs_pagination": false,
       "spatial_config": {
+        "lat_field": "latitude",
+        "lon_field": "longitude",
         "address_fields": {
+          "street": "incident_street",
           "city": "incident_city",
           "state": null,
-          "street": "incident_street",
           "zip": "incident_zip"
         },
         "bounds": {
+          "xmin": -88.3,
+          "xmax": -87.5,
+          "ymin": 41.4,
+          "ymax": 42.2,
           "spatial_reference": {
             "wkid": 4326
-          },
-          "xmax": -87.5,
-          "xmin": -88.3,
-          "ymax": 42.2,
-          "ymin": 41.4
+          }
         },
-        "lat_field": "latitude",
-        "lon_field": "longitude",
         "spatial_join": true
       },
-      "total_records": 85959,
-      "url": "https://datacatalog.cookcountyil.gov/api/odata/v4/cjeq-bs86"
+      "date_field": "death_date",
+      "state_fips_code": "17"
     },
     {
+      "name": "San Diego County",
+      "url": "https://data.sandiegocounty.gov/api/odata/v4/jkvb-n4p7",
+      "total_records": 83304,
+      "needs_pagination": false,
+      "is_open_data": true,
       "drug_columns": [
         "cod_string",
         "contributing_conditions",
         "how_injury_occurred"
       ],
-      "is_open_data": true,
-      "name": "San Diego County",
       "needs_geocoding": false,
-      "needs_pagination": false,
       "spatial_config": null,
-      "total_records": 83304,
-      "url": "https://data.sandiegocounty.gov/api/odata/v4/jkvb-n4p7"
+      "date_field": "death_date",
+      "state_fips_code": "05"
     },
     {
+      "name": "Conneticut",
+      "url": "https://data.ct.gov/api/odata/v4/rybz-nyjw",
+      "total_records": 11981,
+      "needs_pagination": false,
+      "is_open_data": true,
       "drug_columns": [
         "cod"
       ],
-      "is_open_data": true,
-      "name": "Conneticut",
       "needs_geocoding": false,
-      "needs_pagination": false,
       "spatial_config": null,
-      "total_records": 11981,
-      "url": "https://data.ct.gov/api/odata/v4/rybz-nyjw"
+      "date_field": "date",
+      "state_fips_code": "09"
     },
     {
+      "name": "Santa Clara County",
+      "url": "https://data.sccgov.org/api/odata/v4/s3fb-yrjp",
+      "total_records": 29389,
+      "needs_pagination": false,
+      "is_open_data": true,
       "drug_columns": [
         "cause_of_death"
       ],
-      "is_open_data": true,
-      "name": "Santa Clara",
       "needs_geocoding": false,
-      "needs_pagination": false,
       "spatial_config": null,
-      "total_records": 29420,
-      "url": "https://data.sccgov.org/api/odata/v4/s3fb-yrjp"
+      "date_field": "death_date",
+      "state_fips_code": "05"
     },
     {
+      "name": "Milwaukee County",
+      "url": "https://lio.milwaukeecountywi.gov/arcgis/rest/services/MedicalExaminer/PublicDataAccess/MapServer/1/query?f=json&where=1%3D1&outFields=*&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outSR=102100",
+      "total_records": 68819,
+      "needs_pagination": true,
+      "is_open_data": false,
       "drug_columns": [
         "CauseA",
         "CauseB",
         "CauseOther"
       ],
-      "is_open_data": false,
-      "name": "Milwaukee County",
       "needs_geocoding": true,
-      "needs_pagination": true,
       "spatial_config": {
+        "lat_field": "YCoordinate",
+        "lon_field": "XCoordinate",
         "address_fields": {
+          "street": "DeathAddr",
           "city": "DeathCity",
           "state": null,
-          "street": "DeathAddr",
           "zip": "DeathZip"
         },
         "bounds": {
+          "xmin": -88.1,
+          "xmax": -87.8,
+          "ymin": 42.8,
+          "ymax": 43.2,
           "spatial_reference": {
             "wkid": 4326
-          },
-          "xmax": -87.8,
-          "xmin": -88.1,
-          "ymax": 43.2,
-          "ymin": 42.8
+          }
         },
-        "lat_field": "YCoordinate",
-        "lon_field": "XCoordinate",
         "spatial_join": true
       },
-      "total_records": 68843,
-      "url": "https://lio.milwaukeecountywi.gov/arcgis/rest/services/MedicalExaminer/PublicDataAccess/MapServer/1/query?f=json&where=1%3D1&outFields=*&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outSR=102100"
+      "date_field": "DeathDate",
+      "state_fips_code": "55"
     },
     {
+      "name": "Sacramento County",
+      "url": "https://services1.arcgis.com/5NARefyPVtAeuJPU/arcgis/rest/services/Drug_Deaths/FeatureServer/0/query?f=json&outFields=*&returnGeometry=false&spatialRel=esriSpatialRelIntersects&where=DeathYear%20BETWEEN%201900%20AND%202024",
+      "total_records": 1173,
+      "needs_pagination": false,
+      "is_open_data": true,
       "drug_columns": [
         "CAUSE"
       ],
-      "is_open_data": true,
-      "name": "Sacramento",
       "needs_geocoding": false,
-      "needs_pagination": false,
       "spatial_config": null,
-      "total_records": 1174,
-      "url": "https://services1.arcgis.com/5NARefyPVtAeuJPU/arcgis/rest/services/Drug_Deaths/FeatureServer/0/query?f=json&outFields=*&returnGeometry=false&spatialRel=esriSpatialRelIntersects&where=DeathYear%20BETWEEN%201900%20AND%202024"
+      "date_field": "DeathDate",
+      "state_fips_code": "05"
+    },
+    {
+      "name": "Pima County",
+      "url": "file",
+      "total_records": 3263,
+      "needs_pagination": false,
+      "is_open_data": true,
+      "drug_columns": [
+        "DC Worksheet - Immediate cause",
+        "DC Worksheet - Cause of death 2",
+        "DC Worksheet - Cause of death 3",
+        "DC Worksheet - Cause of death 4",
+        "DC Worksheet - Other conditions"
+      ],
+      "needs_geocoding": true,
+      "spatial_config": {
+        "lat_field": "Death Location - Location other",
+        "lon_field": "Death Location - Location other",
+        "address_fields": {
+          "street": "Death Location - Address 1",
+          "city": "Death Location - City",
+          "state": "Death Location - State",
+          "zip": "Death Location - Zip"
+        },
+        "bounds": {
+          "xmin": -115.0,
+          "xmax": -109.0,
+          "ymin": 31.0,
+          "ymax": 39.0,
+          "spatial_reference": {
+            "wkid": 4326
+          }
+        },
+        "spatial_join": true
+      },
+      "date_field": "Identification - Date of death",
+      "state_fips_code": "04"
     }
   ]
 }

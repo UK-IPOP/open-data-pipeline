@@ -18,8 +18,7 @@ echo "Publishing container..."
 docker push ghcr.io/uk-ipop/opendata-pipeline:0.2
 
 echo "Publishing PyPI package..."
-# publish to poetry
-poetry publish --build 
+uv publish --build 
 
 echo "Publishing new docs..."
-poetry run mkdocs gh-deploy
+uv run mkdocs gh-deploy
