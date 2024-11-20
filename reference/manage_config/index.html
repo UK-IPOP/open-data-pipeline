@@ -676,10 +676,10 @@
 
             <details class="quote">
               <summary>Source code in <code>src/opendata_pipeline/manage_config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">19</span>
-<span class="normal">20</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
 <span class="normal">21</span>
-<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_local_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">models</span><span class="o">.</span><span class="n">Settings</span><span class="p">:</span>
+<span class="normal">22</span>
+<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_local_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">models</span><span class="o">.</span><span class="n">Settings</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the config.json file from the project&#39;s root.&quot;&quot;&quot;</span>
     <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Getting local config.json file&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">models</span><span class="o">.</span><span class="n">Settings</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="s2">&quot;config.json&quot;</span><span class="p">)</span>
@@ -704,8 +704,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/opendata_pipeline/manage_config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">25</span>
-<span class="normal">26</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">26</span>
 <span class="normal">27</span>
 <span class="normal">28</span>
 <span class="normal">29</span>
@@ -713,7 +712,8 @@
 <span class="normal">31</span>
 <span class="normal">32</span>
 <span class="normal">33</span>
-<span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_remote_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">models</span><span class="o">.</span><span class="n">Settings</span><span class="p">:</span>
+<span class="normal">34</span>
+<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_remote_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">models</span><span class="o">.</span><span class="n">Settings</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the config.json file from the project&#39;s root on GitHub.&quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;https://raw.githubusercontent.com/UK-IPOP/open-data-pipeline/main/config.json&quot;</span>
@@ -744,15 +744,15 @@
 
             <details class="quote">
               <summary>Source code in <code>src/opendata_pipeline/manage_config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">37</span>
-<span class="normal">38</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span>
 <span class="normal">44</span>
-<span class="normal">45</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">update_local_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">Settings</span><span class="p">):</span>
+<span class="normal">45</span>
+<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">update_local_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">Settings</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the local config.json file.&quot;&quot;&quot;</span>
     <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Updating local config.json file&quot;</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;config.json&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -782,8 +782,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/opendata_pipeline/manage_config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">48</span>
-<span class="normal">49</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
 <span class="normal">50</span>
 <span class="normal">51</span>
 <span class="normal">52</span>
@@ -810,7 +809,11 @@
 <span class="normal">73</span>
 <span class="normal">74</span>
 <span class="normal">75</span>
-<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">update_remote_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">Settings</span><span class="p">):</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">update_remote_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">Settings</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the remote config.json file using the GitHub API.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">github_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;github_token is required to update remote config&quot;</span><span class="p">)</span>
@@ -830,9 +833,12 @@
     <span class="n">data</span><span class="p">[</span><span class="s2">&quot;sha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_sha</span>
 
     <span class="c1"># encode the file contents</span>
-    <span class="n">encoded</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span>
+    <span class="n">model_json</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span>
         <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pypi_key&quot;</span><span class="p">,</span> <span class="s2">&quot;arcgis_api_key&quot;</span><span class="p">,</span> <span class="s2">&quot;github_token&quot;</span><span class="p">},</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span>
     <span class="p">)</span>
+    <span class="c1"># oneliner to encode to b64</span>
+    <span class="n">encoded</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">model_json</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
     <span class="n">data</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">encoded</span>
 
     <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Updating remote config.json file&quot;</span><span class="p">)</span>

@@ -739,14 +739,14 @@
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>target_column</code>
+                <code>target_columns</code>
             </td>
             <td>
-                  <code>str</code>
+                  <code>list[str] | str</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>the column to search</p>
+                <p>the column(s) to search</p>
               </div>
             </td>
             <td>
@@ -811,7 +811,7 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        input_fpath (str): path to the input file</span>
-<span class="sd">        target_column (str): the column to search</span>
+<span class="sd">        target_columns (list[str] | str): the column(s) to search</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        list[str]: the command (list) to run</span>
