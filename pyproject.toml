@@ -1,6 +1,6 @@
 [project]
 name = "opendata-pipeline"
-version = "0.3.1"
+version = "0.3.2"
 description = "A pipeline for processing open medical examier's data using GitHub Actions CI/CD."
 authors = [{name ="Nick Anthony", email = "nanthony007@gmail.com"}]
 license = "MIT"
