@@ -6,14 +6,15 @@ It also requires you to have the [drug extraction tool](https://github.com/UK-IP
 """
 
 from __future__ import annotations
-import csv
-from pathlib import Path
 
-from typing import Any, Generator
-import orjson
-import requests
+import csv
 import subprocess
+from pathlib import Path
+from typing import Any, Generator
+
+import orjson
 import pandas as pd
+import requests
 
 from opendata_pipeline import manage_config, models
 from opendata_pipeline.utils import console
@@ -37,12 +38,13 @@ def command(input_fpath: str, target_columns: list[str] | str) -> list[str]:
 
     Args:
         input_fpath (str): path to the input file
-        target_column (str): the column to search
+        target_columns (list[str] | str): the column(s) to search
 
     Returns:
         list[str]: the command (list) to run
     """
     cmd = [
+        "uvx",
         "extract-drugs",
         "search",
         "--data-file",

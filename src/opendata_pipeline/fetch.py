@@ -75,7 +75,7 @@ async def get_record_set(
     If fails, retries.
 
     Args:
-        session: aiohttp.ClientSession
+        client: httpx.AsyncClient
         url: str
 
     Returns:
