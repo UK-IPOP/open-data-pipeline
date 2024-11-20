@@ -218,7 +218,9 @@ def get_pima_records(config: models.DataSource) -> list[dict[str, typing.Any]]:
     We use this function to load the locally saved Pima records.
     """
     console.log(f"Fetching {config.name} records...")
-    df = pd.read_csv(Path().cwd() / "data" / "pima_records.csv", low_memory=False)
+    df = pd.read_csv(
+        Path().cwd() / "data" / "pima_records.csv", low_memory=False
+    ).drop_duplicates()
 
     return df.to_dict(orient="records")
 
