@@ -7,6 +7,7 @@ The config.json file is used to store the configuration for the pipeline.
 It can also update a local config.json file.
 """
 
+import base64
 from datetime import date
 from pathlib import Path
 
@@ -65,9 +66,12 @@ def update_remote_config(config: models.Settings):
     data["sha"] = file_sha
 
     # encode the file contents
-    encoded = config.model_dump_json(
+    model_json = config.model_dump_json(
         exclude={"pypi_key", "arcgis_api_key", "github_token"}, indent=2
     )
+    # oneliner to encode to b64
+    encoded = base64.b64encode(model_json.encode("utf-8")).decode("utf-8")
+
     data["content"] = encoded
 
     console.log("Updating remote config.json file")
