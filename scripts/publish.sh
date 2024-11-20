@@ -40,7 +40,9 @@ echo "Publishing container..."
 docker push "ghcr.io/uk-ipop/opendata-pipeline:$VERSION"
 
 # Build and publish the Python package
+# remove previous versions
 echo "Building Python package..."
+rm -r dist
 uv build
 
 echo "Publishing PyPI package..."
