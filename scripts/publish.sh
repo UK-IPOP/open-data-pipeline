@@ -1,24 +1,53 @@
-#! /bin/bash
+#!/bin/bash
 
-# you need to export GH_TOKEN 
+set -e  # Exit immediately if a command exits with a non-zero status
+set -o pipefail  # Catch errors in pipelines
 
-echo $GH_TOKEN | docker login ghcr.io -u nanthony007 --password-stdin
+source .env
 
+# Ensure GH_TOKEN is set
+if [ -z "$GH_TOKEN" ]; then
+    echo "Error: GH_TOKEN is not set. Please export GH_TOKEN."
+    exit 1
+fi
+
+# Login to GitHub container registry
+echo "$GH_TOKEN" | docker login ghcr.io -u nanthony007 --password-stdin
+
+# Extract the version from pyproject.toml
+VERSION=$(awk -F'"' '/^version = / {print $2}' pyproject.toml)
+
+if [ -z "$VERSION" ]; then
+    echo "Error: Unable to extract version from pyproject.toml."
+    exit 1
+fi
+
+echo "Detected version: $VERSION"
+
+# Build the Docker container
 echo "Building container..."
-docker build -f containers/cli.Dockerfile -t opendata-pipeline:0.3.0 .
+docker build -f containers/cli.Dockerfile -t opendata-pipeline:$VERSION .
 
-# you also need to custom edit this tag
+# Get the image ID
+IMAGE_ID=$(docker inspect --format='{{.Id}}' opendata-pipeline:$VERSION)
+CLEAN_IMAGE_ID=${IMAGE_ID#sha256:}
 
+# Tag and push the container to GitHub Container Registry
 echo "Tagging container..."
-# tag for ghcr.io
-docker tag bdc5d9c4e064 ghcr.io/uk-ipop/opendata-pipeline:0.3.0
+docker tag "$CLEAN_IMAGE_ID" "ghcr.io/uk-ipop/opendata-pipeline:$VERSION"
 
 echo "Publishing container..."
-# push to ghcr.io
-docker push ghcr.io/uk-ipop/opendata-pipeline:0.3.0
+docker push "ghcr.io/uk-ipop/opendata-pipeline:$VERSION"
+
+# Build and publish the Python package
+echo "Building Python package..."
+uv build
 
 echo "Publishing PyPI package..."
-uv publish --build 
+uv publish --token $PYPI_KEY
 
+# Deploy the updated documentation
 echo "Publishing new docs..."
 uv run mkdocs gh-deploy
+
+echo "All steps completed successfully!"
