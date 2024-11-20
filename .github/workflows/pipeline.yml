@@ -11,8 +11,6 @@ on:
   # can do manually
   workflow_dispatch:
 
-# making executive decision to setup the project in multiple jobs so that we can run in parallel
-# as opposed to one `poetry install --only main` but sequential running
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -48,9 +46,7 @@ jobs:
       - name: Run fetching
         # here we can read local (which is latest remote)
         # BUT we still need to update the remote
-        run: poetry run opendata-pipeline fetch --update-remote
-        # removed `--update-remote` flag while testing
-        # run: poetry run opendata-pipeline fetch
+        run: uv run opendata-pipeline fetch --update-remote
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
