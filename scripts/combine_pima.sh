@@ -14,7 +14,7 @@ mkdir -p "$output_dir"
 output_file="$output_dir/pima_records.csv"
 
 # Combine CSV files
-awk '(NR == 1) || (FNR > 1)' "$@" > "$output_file"
+awk '(NR == 1) || (FNR > 1)' "$@" >"$output_file"
 
 # Notify user
 echo "CSV files combined into '$output_file'"
