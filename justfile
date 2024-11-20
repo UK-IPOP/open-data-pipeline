@@ -31,12 +31,6 @@ run-all:
     @uv run opendata-pipeline spatial-join
     @uv run opendata-pipeline teardown
 
-release MAJOR|MINOR|PATCH:
-    # Check if a valid argument is passed
-    if test (argc) != 1
-        echo "Usage: just bump-version MAJOR|MINOR|PATCH"
-        exit 1
-    end
-
-    @./scripts/bump_version.sh $1
+release MODE:
+    @./scripts/bump_version.sh {{ MODE }}
     @./scripts/publish.sh
