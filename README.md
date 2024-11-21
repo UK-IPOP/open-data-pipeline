@@ -16,7 +16,7 @@ We currently fetch data from the following sources:
 - [Santa Clara County Medical Examiner's Office](https://data.sccgov.org/Health/Medical-Examiner-Coroner-Full-dataset/s3fb-yrjp/about_data)
 - [Sacramento County Medical Examiner's Office](https://sacramentocounty.maps.arcgis.com/apps/dashboards/0661fb44435b4611bf52be84708c4591)
 - [Pima County Medical Examiner's Office](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.pima.gov/212/Medical-Examiner&ved=2ahUKEwidg83ljdqJAxWYwskDHdbRE4YQFnoECDkQAQ&usg=AOvVaw2T_hdJ3x-pqh07VFa9n6B8)
-  - This source is a manual data dump in collaboration with the Pima County ME/C Office. Data is refreshed quarterly.
+  - This source is a manual data dump in collaboration with the Pima County ME/C Office. Data is refreshed monthly.
 
 The results of this data are used in various other analysis here on GitHub:
 
