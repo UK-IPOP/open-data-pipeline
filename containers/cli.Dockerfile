@@ -1,16 +1,18 @@
-FROM python:3.13-slim-bookworm
+# Step 1: Clone the source code
+FROM alpine:3.18 AS builder
+RUN apk add --no-cache git
+WORKDIR /app
+
+# clone latest source code
+RUN git clone https://github.com/UK-IPOP/open-data-pipeline.git .
+
+# Step 2: Build the final image
+FROM python:3.12-slim-bookworm
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-
-# Copy the project into the image
-ADD . /app
-
-# we don't need all these datafiles
-RUN rm -r /app/data
-RUN mkdir /app/data
-ADD data/pima_records.csv /app/data/pima_records.csv
+WORKDIR /app
+COPY --from=builder /app /app
 
 # Sync the project into a new environment, using the frozen lockfile
-WORKDIR /app
 RUN uv sync --frozen
 
 # run the cli
