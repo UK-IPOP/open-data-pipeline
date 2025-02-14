@@ -11,7 +11,6 @@ on:
   # can do manually
   workflow_dispatch:
 
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # fetch the data
@@ -28,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v5
 
       # setup python
       - name: Set up Python
@@ -51,13 +50,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Drug Prep Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: drug-files
           path: data/*_drug_prep.csv
 
       - name: Upload Records Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: records-files
           path: data/*_records.jsonl
@@ -79,7 +78,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v5
 
       # setup python
       - name: Set up Python
@@ -91,7 +90,7 @@ jobs:
 
       # download drug_prep records (should be in data folder)
       - name: Download Drug Prep Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: drug-files
           path: data
@@ -104,7 +103,7 @@ jobs:
         run: uv run opendata-pipeline extract-drugs
 
       # Upload drug data file artifact
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: drug-output
           path: data/drug_*
@@ -126,7 +125,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v5
 
       # setup python
       - name: Set up Python
@@ -138,7 +137,7 @@ jobs:
 
       # download records (should be in data folder)
       - name: Download Records Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: records-files
           path: data
@@ -152,7 +151,7 @@ jobs:
           ARCGIS_API_KEY: ${{ secrets.ARCGIS_TOKEN }}
 
       # Upload geocoding file artifact
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: geocoding-output
           path: data/geocoded_data.jsonl
@@ -174,7 +173,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v5
 
       # setup python
       - name: Set up Python
@@ -186,21 +185,21 @@ jobs:
 
       # download records (should be in data folder)
       - name: Download Records Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: records-files
           path: data
 
       # download records (should be in data folder)
       - name: Download Drug Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: drug-output
           path: data
 
       # download records (should be in data folder)
       - name: Download Geocoding Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: geocoding-output
           path: data
@@ -212,7 +211,7 @@ jobs:
         run: uv run opendata-pipeline spatial-join
 
       - name: Upload All Data
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: all-data
           path: data
@@ -234,20 +233,20 @@ jobs:
 
       # download records (should be in data folder)
       - name: Download Records Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: all-data
           path: data
 
       # download drug files (should be in data folder)
       - name: Download Records Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: drug-output
           path: data
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v5
 
       # setup python
       - name: Set up Python
@@ -260,7 +259,7 @@ jobs:
         run: ./scripts/prepare_data_release.sh
 
       - name: Upload assets artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release-assets
           path: assets
@@ -278,7 +277,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download Records Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           # should now be in assets folder
           name: release-assets
