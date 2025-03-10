@@ -12,6 +12,7 @@ for file in data/*_wide_form.csv; do
 
     uvx --python="3.12" \
         --with="setuptools" \
+        --with="ipython" \
         --with="ydata-profiling" \
         ydata_profiling \
         "$file" \
