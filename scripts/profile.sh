@@ -13,7 +13,7 @@ for file in data/*_wide_form.csv; do
     uvx --python="3.12" \
         --with="setuptools" \
         --with="ipython" \
-        --with="ydata-profiling" \
+        --with="ydata-profiling=4.12" \
         ydata_profiling \
         "$file" \
         "reports/$title.html" \
