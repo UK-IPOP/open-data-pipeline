@@ -50,6 +50,13 @@ We currently do not guarantee Windows support unfortunately. If you want to help
 There is further API-documentation available on the GitHub Pages [website](https://uk-ipop.github.io/open-data-pipeline/) for this repo if you want to interact with the CLI.
 I would recommend using the docker image as it is easier to use and always referring to the CLI `--help` for more information.
 
+**NOTE:** The Census has recently made changes making it harder to download files running on servers so if you add
+a location to the configuration, make sure its corresponding CensusTract file is downloaded and placed into the `data/spatial` folder. You can do this by running the following command:
+
+`wget -P data/spatial <URL>` where the URL should be the  URL of the the TIGER TRACT zip file, for example: https://www2.census.gov/geo/tiger/TIGER2024/TRACT/tl_2024_09_tract.zip
+
+Or, an example of the url: https://www2.census.gov/geo/tiger/TIGER2024/TRACT/tl_2024_<STATE_FIPS_CODE>_tract.zip
+
 ### Workflow
 
 The workflow can best be described by looking at the `pipeline.yml` file.

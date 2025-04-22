@@ -78,8 +78,8 @@ def fetch_tracts(fips_code: str) -> geopandas.GeoDataFrame:
     Returns:
         geopandas.GeoDataFrame: The census tracts geodataframe
     """
-    url = f"https://www2.census.gov/geo/tiger/TIGER2024/TRACT/tl_2024_{fips_code}_tract.zip"
-    dataset: geopandas.GeoDataFrame = geopandas.read_file(url).to_crs("EPSG:4326")
+    fpath = Path().cwd() / "data" / "spatial" / f"tl_2024_{fips_code}_tract.zip"
+    dataset: geopandas.GeoDataFrame = geopandas.read_file(fpath).to_crs("EPSG:4326")
     return dataset
 
 
