@@ -262,6 +262,7 @@ def run(settings: models.Settings) -> None:
             records_df["EventDate"] = records_df["EventDate"].apply(
                 handle_mil_eventdate
             )
+            records_df.dropna(subset=["EventDate"], inplace=True)
         console.log("Added death date breakdowns to records")
 
         drug_df = read_drug_data(source=data_source)
