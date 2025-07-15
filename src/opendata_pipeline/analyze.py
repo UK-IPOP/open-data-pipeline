@@ -263,7 +263,7 @@ def run(settings: models.Settings) -> None:
                 handle_mil_eventdate
             )
             records_df.drop_duplicates(
-                subset=["casenum"],
+                subset=["CaseNum"],
                 keep="first",
             )
         console.log("Added death date breakdowns to records")
