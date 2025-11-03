@@ -2,7 +2,7 @@
   "sources": [
     {
       "name": "Cook County",
-      "url": "https://datacatalog.cookcountyil.gov/api/odata/v4/cjeq-bs86",
+      "url": "https://datacatalog.cookcountyil.gov/resource/cjeq-bs86.json""
       "total_records": 92261,
       "needs_pagination": false,
       "is_open_data": true,
