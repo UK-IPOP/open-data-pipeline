@@ -2,7 +2,7 @@
   "sources": [
     {
       "name": "Cook County",
-      "url": "https://datacatalog.cookcountyil.gov/resource/cjeq-bs86.json""
+      "url": "https://datacatalog.cookcountyil.gov/api/v3/views/cjeq-bs86/query.json",
       "total_records": 92261,
       "needs_pagination": false,
       "is_open_data": true,
@@ -36,7 +36,7 @@
     },
     {
       "name": "San Diego County",
-      "url": "https://data.sandiegocounty.gov/api/odata/v4/jkvb-n4p7",
+      "url": "https://data.sandiegocounty.gov/api/v3/view/jkvb-n4p7/query.json",
       "total_records": 86757,
       "needs_pagination": false,
       "is_open_data": true,
@@ -52,7 +52,7 @@
     },
     {
       "name": "Conneticut",
-      "url": "https://data.ct.gov/api/odata/v4/rybz-nyjw",
+      "url": "https://data.ct.gov/api/v3/views/rybz-nyjw/query.json",
       "total_records": 12963,
       "needs_pagination": false,
       "is_open_data": true,
@@ -66,7 +66,7 @@
     },
     {
       "name": "Santa Clara County",
-      "url": "https://data.sccgov.org/api/odata/v4/s3fb-yrjp",
+      "url": "https://data.sccgov.org/api/v3/views/s3fb-yrjp/query.json",
       "total_records": 32991,
       "needs_pagination": false,
       "is_open_data": true,

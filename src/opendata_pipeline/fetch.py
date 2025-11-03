@@ -13,6 +13,7 @@ import httpx
 import pandas as pd
 import requests
 from rich.progress import track
+from sodapy import Socrata
 
 from opendata_pipeline import manage_config, models
 from opendata_pipeline.utils import console
@@ -26,24 +27,22 @@ def get_open_data_records(
 
     This is a synchronous request.
 
-    It sets the total to 1000 + the data source current total.
-
     Args:
         config: DataSource object
 
     Returns:
         list[dict[str, typing.Any]]: list of records
     """
-    # we add 1000 assuming there were more records than last week
+    # parse url for root domain and data identifier
     console.log(f"Fetching {config.name} records...")
-    payload = {"$top": config.total_records + 1_000}
-    response = requests.get(config.url, params=payload)
-    data: dict[str, typing.Any] = response.json()
-    if "value" not in data:
-        raise ValueError(
-            f"Unable to get records from {config.url}, `value` key not in response"
-        )
-    return data["value"]
+    parts = config.url.removeprefix("https://").split("/")
+    root_domain = parts[0]
+    identifier = parts[4]
+    # we add 1000 assuming there were more records than last week
+    new_limit = config.total_records + 1_000
+    client = Socrata(root_domain, None)
+    data = client.get(identifier, limit=new_limit)
+    return data
 
 
 def build_url(offset: int, base_url: str) -> str:
@@ -98,14 +97,14 @@ def make_df_with_identifier(
 ) -> pd.DataFrame:
     """Make dataframe with case identifier.
 
-    Uses the current index to label records with a global identifier.
+        Uses the current index to label records with a global identifier.
+    str
+        Args:
+            records: list[dict[str, typing.Any]]
+            current_index: int
 
-    Args:
-        records: list[dict[str, typing.Any]]
-        current_index: int
-
-    Returns:
-        pd.DataFrame: dataframe with case identifier
+        Returns:
+            pd.DataFrame: dataframe with case identifier
     """
     df = pd.DataFrame(records)
     df["CaseIdentifier"] = df.index + current_index
@@ -172,24 +171,9 @@ def cook_county_drug_col(df: pd.DataFrame) -> pd.DataFrame:
     # a custom handler for this primary cause of death
     # taken from STACKOVERFLOW
     dff = df.copy()
-    dff["primary_cod"] = (
-        dff["primarycause"]
-        .combine(
-            dff["primarycause_linea"],
-            lambda x, y: ((x or "") + " " + (y or "")) or None,
-            None,
-        )
-        .combine(
-            dff["primarycause_lineb"],
-            lambda x, y: ((x or "") + " " + (y or "")) or None,
-            None,
-        )
-        .combine(
-            dff["primarycause_linec"],
-            lambda x, y: ((x or "") + " " + (y or "")) or None,
-            None,
-        )
-    ).apply(lambda x: x.strip() if x else None)
+    dff["primary_cod"] = (dff["primarycause"]).apply(
+        lambda x: x.strip() if x and pd.notnull(x) else None
+    )
     return dff
 
 
