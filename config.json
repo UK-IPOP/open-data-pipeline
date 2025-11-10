@@ -3,7 +3,7 @@
     {
       "name": "Cook County",
       "url": "https://datacatalog.cookcountyil.gov/api/v3/views/cjeq-bs86/query.json",
-      "total_records": 92601,
+      "total_records": 92755,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -67,7 +67,7 @@
     {
       "name": "Santa Clara County",
       "url": "https://data.sccgov.org/api/v3/views/s3fb-yrjp/query.json",
-      "total_records": 33215,
+      "total_records": 33286,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -81,7 +81,7 @@
     {
       "name": "Milwaukee County",
       "url": "https://lio.milwaukeecountywi.gov/arcgis/rest/services/MedicalExaminer/PublicDataAccess/MapServer/1/query?f=json&where=1%3D1&outFields=*&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outSR=102100",
-      "total_records": 71711,
+      "total_records": 71772,
       "needs_pagination": true,
       "is_open_data": false,
       "drug_columns": [
