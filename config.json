@@ -3,7 +3,7 @@
     {
       "name": "Cook County",
       "url": "https://datacatalog.cookcountyil.gov/api/v3/views/cjeq-bs86/query.json",
-      "total_records": 93630,
+      "total_records": 93779,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -37,7 +37,7 @@
     {
       "name": "San Diego County",
       "url": "https://data.sandiegocounty.gov/api/v3/view/jkvb-n4p7/query.json",
-      "total_records": 87328,
+      "total_records": 87588,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -67,7 +67,7 @@
     {
       "name": "Santa Clara County",
       "url": "https://data.sccgov.org/api/v3/views/s3fb-yrjp/query.json",
-      "total_records": 33860,
+      "total_records": 33958,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -81,7 +81,7 @@
     {
       "name": "Milwaukee County",
       "url": "https://lio.milwaukeecountywi.gov/arcgis/rest/services/MedicalExaminer/PublicDataAccess/MapServer/1/query?f=json&where=1%3D1&outFields=*&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outSR=102100",
-      "total_records": 72175,
+      "total_records": 72244,
       "needs_pagination": true,
       "is_open_data": false,
       "drug_columns": [
@@ -116,7 +116,7 @@
     {
       "name": "Sacramento County",
       "url": "https://services1.arcgis.com/5NARefyPVtAeuJPU/arcgis/rest/services/Drug_Deaths/FeatureServer/0/query?f=json&outFields=*&returnGeometry=false&spatialRel=esriSpatialRelIntersects&where=DeathYear%20BETWEEN%201900%20AND%202024",
-      "total_records": 1246,
+      "total_records": 1138,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
