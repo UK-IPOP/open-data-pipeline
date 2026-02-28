@@ -24,6 +24,10 @@ The results of this data are used in various other analysis here on GitHub:
   - Where we add geospatial data to the Cook County data
     - This was excluded from this automated pipeline due to specific requirements for the data for only Cook County
 
+
+> **NOTICE**: We have removed the Milwaukee data due to them taking down their site for the short term. Use [older](https://github.com/UK-IPOP/open-data-pipeline/releases/tag/2025-12-01)
+> data if you require that jurisdiction.
+
 ## Getting Started
 
 This repo exists mainly to take advantage of GitHub actions for automation.

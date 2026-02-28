@@ -79,41 +79,6 @@
       "state_fips_code": "05"
     },
     {
-      "name": "Milwaukee County",
-      "url": "https://lio.milwaukeecountywi.gov/arcgis/rest/services/MedicalExaminer/PublicDataAccess/MapServer/1/query?f=json&where=1%3D1&outFields=*&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outSR=102100",
-      "total_records": 72244,
-      "needs_pagination": true,
-      "is_open_data": false,
-      "drug_columns": [
-        "CauseA",
-        "CauseB",
-        "CauseOther"
-      ],
-      "needs_geocoding": true,
-      "spatial_config": {
-        "lat_field": "YCoordinate",
-        "lon_field": "XCoordinate",
-        "address_fields": {
-          "street": "DeathAddr",
-          "city": "DeathCity",
-          "state": null,
-          "zip": "DeathZip"
-        },
-        "bounds": {
-          "xmin": -88.1,
-          "xmax": -87.8,
-          "ymin": 42.8,
-          "ymax": 43.2,
-          "spatial_reference": {
-            "wkid": 4326
-          }
-        },
-        "spatial_join": true
-      },
-      "date_field": "DeathDate",
-      "state_fips_code": "55"
-    },
-    {
       "name": "Sacramento County",
       "url": "https://services1.arcgis.com/5NARefyPVtAeuJPU/arcgis/rest/services/Drug_Deaths/FeatureServer/0/query?f=json&outFields=*&returnGeometry=false&spatialRel=esriSpatialRelIntersects&where=DeathYear%20BETWEEN%201900%20AND%202024",
       "total_records": 1138,
@@ -166,3 +131,4 @@
     }
   ]
 }
+
