@@ -3,7 +3,7 @@
     {
       "name": "Cook County",
       "url": "https://datacatalog.cookcountyil.gov/api/v3/views/cjeq-bs86/query.json",
-      "total_records": 94779,
+      "total_records": 94905,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
