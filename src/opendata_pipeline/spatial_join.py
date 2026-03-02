@@ -58,6 +58,10 @@ def configure_source_data(df: pd.DataFrame, config: models.GeoConfig) -> pd.Data
 
 def convert_to_geodataframe(df: pd.DataFrame) -> geopandas.GeoDataFrame:
     """Convert the dataframe to a geodataframe using lat/long."""
+    df["composite_longitude"] = pd.to_numeric(
+        df["composite_longitude"], errors="coerce"
+    )
+    df["composite_latitude"] = pd.to_numeric(df["composite_latitude"], errors="coerce")
     geo_df = geopandas.GeoDataFrame(
         data=df,
         geometry=geopandas.points_from_xy(
