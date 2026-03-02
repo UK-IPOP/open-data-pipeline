@@ -252,8 +252,8 @@ jobs:
       - name: Set up Python
         run: uv python install 3.12
 
-      - name: Run profiling
-        run: ./scripts/profile.sh
+      # - name: Run profiling
+      #   run: ./scripts/profile.sh
 
       - name: Prepare Data for Release Assets
         run: ./scripts/prepare_data_release.sh
