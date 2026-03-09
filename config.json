@@ -128,6 +128,41 @@
       },
       "date_field": "Identification - Date of death",
       "state_fips_code": "04"
+    },
+    {
+      "name": "Cuyahoga County",
+      "url": "file",
+      "total_records": 3340,
+      "needs_pagination": false,
+      "is_open_data": true,
+      "drug_columns": [
+        "cause_of_death",
+        "rc_app_manner"
+      ],
+      "needs_geocoding": true,
+      "spatial_config": {
+        "lat_field": "redcap_repeat_instance",
+        "lon_field": "redcap_repeat_instance",
+        "address_fields": {
+          "street": "street",
+          "city": "city",
+          "state": "state",
+          "zip": "zip"
+        },
+        "bounds": {
+          "xmin": -81.37,
+          "xmax": -81.97,
+          "ymin": 41.27,
+          "ymax": 41.63,
+          "spatial_reference": {
+            "wkid": 4326
+          }
+        },
+        "spatial_join": true
+      },
+      "date_field": "death_date",
+      "state_fips_code": "39"
     }
   ]
 }
+
