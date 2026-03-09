@@ -222,7 +222,7 @@ def get_cuyahoga_records(config: models.DataSource) -> list[dict[str, typing.Any
     df["death_date"] = (
         df["death_date_year"]
         .astype("str")
-        .concat(
+        .str.concat(
             [
                 df["death_date_month"].astype("str"),
                 df["death_date_day"].astype("str"),
