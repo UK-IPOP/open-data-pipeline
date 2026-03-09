@@ -218,12 +218,17 @@ def get_cuyahoga_records(config: models.DataSource) -> list[dict[str, typing.Any
     df = pd.read_csv(
         Path().cwd() / "data" / "cuyahoga_records.csv", low_memory=False
     ).drop_duplicates()
+    # convert to str first
     df["death_date"] = (
         df["death_date_year"]
-        + "/"
-        + df["death_date_month"]
-        + "/"
-        + df["death_date_day"]
+        .astype("str")
+        .concat(
+            [
+                df["death_date_month"].astype("str"),
+                df["death_date_day"].astype("str"),
+            ],
+            sep="/",
+        )
     )
 
     return df.to_dict(orient="records")
