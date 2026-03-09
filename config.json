@@ -3,7 +3,7 @@
     {
       "name": "Cook County",
       "url": "https://datacatalog.cookcountyil.gov/api/v3/views/cjeq-bs86/query.json",
-      "total_records": 94905,
+      "total_records": 95018,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -67,7 +67,7 @@
     {
       "name": "Santa Clara County",
       "url": "https://data.sccgov.org/api/v3/views/s3fb-yrjp/query.json",
-      "total_records": 34696,
+      "total_records": 34765,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -95,7 +95,7 @@
     {
       "name": "Pima County",
       "url": "file",
-      "total_records": 3843,
+      "total_records": 3874,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -132,7 +132,7 @@
     {
       "name": "Cuyahoga County",
       "url": "file",
-      "total_records": 3340,
+      "total_records": 1396,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -165,4 +165,3 @@
     }
   ]
 }
-
