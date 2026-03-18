@@ -29,6 +29,8 @@ The results of this data are used in various other analysis here on GitHub:
 
 > **NOTICE**: We have removed the Milwaukee data due to them taking down their site for the short term. Use [older](https://github.com/UK-IPOP/open-data-pipeline/releases/tag/2025-12-01)
 > data if you require that jurisdiction.
+>
+> **UPDATE: 2026/03/18** - They have since re-published their site but are now on PowerBI. We are making efforts to reach out to them for direct data sharing or enabling the data download feature on the dashboard.
 
 ## Getting Started
 
