@@ -80,7 +80,7 @@
     },
     {
       "name": "Sacramento County",
-      "url": "https://services1.arcgis.com/5NARefyPVtAeuJPU/arcgis/rest/services/Drug_Deaths/FeatureServer/0/query?f=json&outFields=*&returnGeometry=false&spatialRel=esriSpatialRelIntersects&where=DeathYear%20BETWEEN%201900%20AND%202024",
+      "url": "https://services1.arcgis.com/5NARefyPVtAeuJPU/arcgis/rest/services/Drug_Deaths/FeatureServer/0/query?f=json&outFields=*&returnGeometry=false&spatialRel=esriSpatialRelIntersects&where=DeathYear%20BETWEEN%201900%20AND%202027",
       "total_records": 1139,
       "needs_pagination": false,
       "is_open_data": true,
