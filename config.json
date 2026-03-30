@@ -3,7 +3,7 @@
     {
       "name": "Cook County",
       "url": "https://datacatalog.cookcountyil.gov/api/v3/views/cjeq-bs86/query.json",
-      "total_records": 95268,
+      "total_records": 95393,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -37,7 +37,7 @@
     {
       "name": "San Diego County",
       "url": "https://data.sandiegocounty.gov/api/v3/view/jkvb-n4p7/query.json",
-      "total_records": 88192,
+      "total_records": 88487,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -67,7 +67,7 @@
     {
       "name": "Santa Clara County",
       "url": "https://data.sccgov.org/api/v3/views/s3fb-yrjp/query.json",
-      "total_records": 34915,
+      "total_records": 34987,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -81,7 +81,7 @@
     {
       "name": "Sacramento County",
       "url": "https://services1.arcgis.com/5NARefyPVtAeuJPU/arcgis/rest/services/Drug_Deaths/FeatureServer/0/query?f=json&outFields=*&returnGeometry=false&spatialRel=esriSpatialRelIntersects&where=DeathYear%20BETWEEN%201900%20AND%202027",
-      "total_records": 1139,
+      "total_records": 1403,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -95,7 +95,7 @@
     {
       "name": "Pima County",
       "url": "file",
-      "total_records": 3874,
+      "total_records": 4293,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
