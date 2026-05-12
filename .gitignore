@@ -17,7 +17,7 @@ vendor/
 .DS_Store
 *.jsonl
 *.csv
-!data/pima_records.csv
+!data/pima_county/*
 !data/cuyahoga_records.csv
 
 # Added by cargo
