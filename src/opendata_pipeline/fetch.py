@@ -205,10 +205,14 @@ def get_pima_records(config: models.DataSource) -> list[dict[str, typing.Any]]:
     console.log(f"Fetching {config.name} records...")
     # drop duplicates based on casenum, keep latest added one
     # glob all the csv files in this folder - globbing requires polars not pandas
-    df = pl.read_csv(
-        Path().cwd() / "data" / "pima_county" / "*.csv",
-        low_memory=False,
-    ).drop_duplicates(subset="Identification - Case number", keep="last")
+    df = (
+        pl.read_csv(
+            Path().cwd() / "data" / "pima_county" / "*.csv",
+            low_memory=False,
+        )
+        .to_pandas()
+        .drop_duplicates(subset="Identification - Case number", keep="last")
+    )
 
     return df.to_dict(orient="records")
 
