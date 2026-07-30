@@ -17,8 +17,9 @@ We currently fetch data from the following sources:
 - [Sacramento County Medical Examiner's Office](https://sacramentocounty.maps.arcgis.com/apps/dashboards/0661fb44435b4611bf52be84708c4591)
 - [Pima County Medical Examiner's Office](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.pima.gov/212/Medical-Examiner&ved=2ahUKEwidg83ljdqJAxWYwskDHdbRE4YQFnoECDkQAQ&usg=AOvVaw2T_hdJ3x-pqh07VFa9n6B8)
   - This source is a manual data dump in collaboration with the Pima County ME/C Office. Data is refreshed monthly.
-- Cuyahoga County Medical Examiner's Office
+- [Cuyahoga County Medical Examiner's Office](https://cuyahogacounty.gov/medical-examiner)
   - This source is a manual data dump in collaboration with the Cuyahoga County ME/C Office. Data is refreshed monthly.
+- [Allegheny County Fatal Accidental Overdoses](https://data.wprdc.org/dataset/allegheny-county-fatal-accidental-overdoses/resource/1c59b26a-1684-4bfb-92f7-205b947530cf)
 
 The results of this data are used in various other analysis here on GitHub:
 

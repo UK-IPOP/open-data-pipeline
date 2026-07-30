@@ -218,10 +218,7 @@ def get_pima_records(config: models.DataSource) -> list[dict[str, typing.Any]]:
 
 
 def get_cuyahoga_records(config: models.DataSource) -> list[dict[str, typing.Any]]:
-    """Get records from Cuyahog.
-
-    We use this function to load the locally saved Pima records.
-    """
+    """Get records from Cuyahoga."""
     console.log(f"Fetching {config.name} records...")
     df = pd.read_csv(
         Path().cwd() / "data" / "cuyahoga_records.csv", low_memory=False
@@ -235,6 +232,13 @@ def get_cuyahoga_records(config: models.DataSource) -> list[dict[str, typing.Any
         + df["death_date_day"].astype("str")
     )
 
+    return df.to_dict(orient="records")
+
+
+def get_allegheny_records(config: models.DataSource) -> list[dict[str, typing.Any]]:
+    """Get records from Allegheny."""
+    console.log(f"Fetching {config.name} records...")
+    df = pd.read_csv(config.url)
     return df.to_dict(orient="records")
 
 
@@ -255,6 +259,8 @@ def get_sync_records(config: models.DataSource, current_index: int) -> int:
         records = get_pima_records(config)
     elif config.name == "Cuyahoga County":
         records = get_cuyahoga_records(config)
+    elif config.name == "Allegheny County":
+        records = get_allegheny_records(config)
     else:
         records = get_open_data_records(config)
     df = make_df_with_identifier(records, current_index)

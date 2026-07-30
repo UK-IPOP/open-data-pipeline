@@ -162,6 +162,29 @@
       },
       "date_field": "death_date",
       "state_fips_code": "39"
+    },
+    {
+      "name": "Allegheny County",
+      "url": "https://data.wprdc.org/datastore/dump/1c59b26a-1684-4bfb-92f7-205b947530cf",
+      "total_records": 7741,
+      "needs_pagination": false,
+      "is_open_data": false,
+      "drug_columns": [
+        "combined_od1",
+        "combined_od2",
+        "combined_od3",
+        "combined_od4",
+        "combined_od5",
+        "combined_od6",
+        "combined_od7",
+        "combined_od8",
+        "combined_od9",
+        "combined_od10"
+      ],
+      "needs_geocoding": false,
+      "spatial_config": null,
+      "date_field": "death_date_and_time",
+      "state_fips_code": "42"
     }
   ]
 }
