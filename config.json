@@ -52,16 +52,24 @@
     },
     {
       "name": "Conneticut",
-      "url": "https://data.ct.gov/api/v3/views/rybz-nyjw/query.json",
+      "url": "https://portal.ct.gov/-/media/ocme/statistics/calendar-years-2014-to-2025.xlsx",
       "total_records": 12963,
       "needs_pagination": false,
-      "is_open_data": true,
+      "is_open_data": false,
       "drug_columns": [
-        "cod"
+        "COD",
+        "Cause A",
+        "Cause B",
+        "Cause C",
+        "Cause D",
+        "Combined Cause",
+        "DescriptionofInjury",
+        "Injury",
+        "Other Significant"
       ],
       "needs_geocoding": false,
       "spatial_config": null,
-      "date_field": "date",
+      "date_field": "DOD",
       "state_fips_code": "09"
     },
     {

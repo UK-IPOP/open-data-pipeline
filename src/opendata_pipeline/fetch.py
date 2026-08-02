@@ -242,6 +242,43 @@ def get_allegheny_records(config: models.DataSource) -> list[dict[str, typing.An
     return df.to_dict(orient="records")
 
 
+def get_connecticut_records(config: models.DataSource) -> list[dict[str, typing.Any]]:
+    """Get records from Connecticut."""
+    console.log(f"Fetching {config.name} records...")
+    # gets all dfs and sheet names as k(sheet name), v(df) pairs
+    data = pd.read_excel(config.url, sheet_name=None)
+    rows = []
+    for sheet_name, table in data.items():
+        # manual switching :(
+        print(f"Checking CT--{sheet_name}...")
+        if config.date_field not in table.columns:
+            table.rename(
+                columns={
+                    "DateReported": "DOD",
+                    "Date Reported": "DOD",
+                },
+                inplace=True,
+            )
+        # now switch to target names
+        table.rename(
+            columns={
+                "CAUSE of Death": "COD",
+                "Cause of Death": "COD",
+                "ImmediateCauseA": "Cause A",
+                "Cause Combined": "Combined Cause",
+                "Description of Injury": "DescriptionofInjury",
+                "Descriptionof Injury": "DescriptionofInjury",
+                "Other Significan": "Other Significant",
+                "Other Significant Conditions": "Other Significant",
+                "OtherSignifican": "Other Significant",
+            },
+            inplace=True,
+        )
+        rows.extend(table.to_dict(orient="records"))
+    df = pd.DataFrame(rows)
+    return df.to_dict(orient="records")
+
+
 def get_sync_records(config: models.DataSource, current_index: int) -> int:
     """Get records from url synchronously.
 
@@ -261,6 +298,8 @@ def get_sync_records(config: models.DataSource, current_index: int) -> int:
         records = get_cuyahoga_records(config)
     elif config.name == "Allegheny County":
         records = get_allegheny_records(config)
+    elif config.name == "Conneticut":
+        records = get_connecticut_records(config)
     else:
         records = get_open_data_records(config)
     df = make_df_with_identifier(records, current_index)
