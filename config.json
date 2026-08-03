@@ -149,8 +149,8 @@
       ],
       "needs_geocoding": true,
       "spatial_config": {
-        "lat_field": "redcap_repeat_instance",
-        "lon_field": "redcap_repeat_instance",
+        "lat_field": "ccmeo_case",
+        "lon_field": "ccmeo_case",
         "address_fields": {
           "street": "street",
           "city": "city",
