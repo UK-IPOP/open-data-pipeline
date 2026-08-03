@@ -54,8 +54,8 @@
       "name": "Conneticut",
       "url": "https://portal.ct.gov/-/media/ocme/statistics/calendar-years-2014-to-2025.xlsx",
       "total_records": 12963,
-      "needs_pagination": true,
-      "is_open_data": false,
+      "needs_pagination": false,
+      "is_open_data": true,
       "drug_columns": [
         "COD",
         "Cause A",
