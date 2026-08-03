@@ -176,7 +176,7 @@
       "url": "https://data.wprdc.org/datastore/dump/1c59b26a-1684-4bfb-92f7-205b947530cf",
       "total_records": 7741,
       "needs_pagination": false,
-      "is_open_data": false,
+      "is_open_data": true,
       "drug_columns": [
         "combined_od1",
         "combined_od2",
