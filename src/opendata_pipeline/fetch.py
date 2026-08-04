@@ -298,7 +298,7 @@ def get_sync_records(config: models.DataSource, current_index: int) -> int:
         records = get_cuyahoga_records(config)
     elif config.name == "Allegheny County":
         records = get_allegheny_records(config)
-    elif config.name == "Conneticut":
+    elif config.name == "Connecticut":
         records = get_connecticut_records(config)
     else:
         records = get_open_data_records(config)

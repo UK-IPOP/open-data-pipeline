@@ -120,7 +120,7 @@ def add_death_date_breakdowns(
     """
     date_col = source.date_field
     # some sources are Unix timestamps
-    if source.name in ("Milwaukee County", "Sacramento County"):
+    if source.name in ("Milwaukee County", "Sacramento County", "Connecticut"):
         df[date_col] = pd.to_datetime(df[date_col], unit="ms")
     else:
         df[date_col] = pd.to_datetime(df[date_col])
