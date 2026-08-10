@@ -3,7 +3,7 @@
     {
       "name": "Cook County",
       "url": "https://datacatalog.cookcountyil.gov/api/v3/views/cjeq-bs86/query.json",
-      "total_records": 97817,
+      "total_records": 97995,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -75,7 +75,7 @@
     {
       "name": "Santa Clara County",
       "url": "https://data.sccgov.org/api/v3/views/s3fb-yrjp/query.json",
-      "total_records": 36343,
+      "total_records": 36410,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -89,7 +89,7 @@
     {
       "name": "Sacramento County",
       "url": "https://services1.arcgis.com/5NARefyPVtAeuJPU/arcgis/rest/services/Drug_Deaths/FeatureServer/0/query?f=json&outFields=*&returnGeometry=false&spatialRel=esriSpatialRelIntersects&where=DeathYear%20BETWEEN%201900%20AND%202027",
-      "total_records": 1475,
+      "total_records": 1481,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
@@ -174,7 +174,7 @@
     {
       "name": "Allegheny County",
       "url": "https://data.wprdc.org/datastore/dump/1c59b26a-1684-4bfb-92f7-205b947530cf",
-      "total_records": 7742,
+      "total_records": 7748,
       "needs_pagination": false,
       "is_open_data": true,
       "drug_columns": [
