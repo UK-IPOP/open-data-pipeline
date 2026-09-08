@@ -41,6 +41,10 @@ jobs:
       - name: Initialize App
         run: uv run opendata-pipeline init
 
+      # update Allegheny
+      - name: Update Allegheny records
+        run: bash scripts/update_allegheny_records.sh
+
       # fetch records
       - name: Run fetching
         # here we can read local (which is latest remote)

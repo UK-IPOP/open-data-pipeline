@@ -19,6 +19,7 @@ vendor/
 *.csv
 !data/pima_county/*
 !data/cuyahoga_records.csv
+!data/allegheny_records.csv
 
 # Added by cargo
 
