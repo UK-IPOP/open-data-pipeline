@@ -225,11 +225,11 @@ def get_cuyahoga_records(config: models.DataSource) -> list[dict[str, typing.Any
     ).drop_duplicates()
     # convert to str first
     df["death_date"] = (
-        df["death_date_year"].astype("str")
+        df["death_date_year"].astype("str").str.removesuffix(".0")
         + "/"
-        + df["death_date_month"].astype("str")
+        + df["death_date_month"].astype("str").str.removesuffix(".0")
         + "/"
-        + df["death_date_day"].astype("str")
+        + df["death_date_day"].astype("str").str.removesuffix(".0")
     )
 
     return df.to_dict(orient="records")
