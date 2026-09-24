@@ -10,6 +10,7 @@ import typing
 from pathlib import Path
 
 import httpx
+import numpy as np
 import pandas as pd
 import polars as pl
 import requests
@@ -231,6 +232,7 @@ def get_cuyahoga_records(config: models.DataSource) -> list[dict[str, typing.Any
         + "/"
         + df["death_date_day"].astype("str").str.removesuffix(".0")
     )
+    df["death_date"].replace("nan/nan/nan", np.nan, inplace=True)
 
     return df.to_dict(orient="records")
 
