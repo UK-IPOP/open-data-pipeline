@@ -2,8 +2,11 @@
 
 [![Pipeline](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pipeline.yml/badge.svg?branch=main)](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pipeline.yml)
 [![Docs](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pages/pages-build-deployment)
+## Maintainer
 
-<img src="https://github.com/UK-IPOP/open-data-pipeline/assets/45318637/c5c50811-f242-42d2-adfd-fa5563c1a89f" alt="logo" width=500 />
+<img src="./imgs/3-foxes-logo.png" alt="logo" width=500 />
+
+This repository is maintained and operated by [3-Foxes](https://3-foxes.com) on behalf of UKY IPOP.
 
 This repository contains the code for the Medical Examiner Open Data Pipeline.
 
