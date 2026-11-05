@@ -1,12 +1,11 @@
+# <img src="./imgs/3-foxes-logo.png" alt="logo" width=50 /> A 3-Foxes Maintained Project 
+
+As of 2026-11-1 this repository is maintained and operated by [3-Foxes](https://3-foxes.com) on behalf of UKY IPOP. Primary development work will shift to 3F with the sole purpose of improving the pipeline and further supporting researchers both within IPOP and externally.
+
 # Medical Examiner Open Data Pipeline
 
 [![Pipeline](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pipeline.yml/badge.svg?branch=main)](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pipeline.yml)
 [![Docs](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://github.com/UK-IPOP/open-data-pipeline/actions/workflows/pages/pages-build-deployment)
-## Maintainer
-
-<img src="./imgs/3-foxes-logo.png" alt="logo" width=500 />
-
-This repository is maintained and operated by [3-Foxes](https://3-foxes.com) on behalf of UKY IPOP.
 
 This repository contains the code for the Medical Examiner Open Data Pipeline.
 
